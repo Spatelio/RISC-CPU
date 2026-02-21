@@ -1,0 +1,14 @@
+module reg32 (
+    input  wire        clk,
+    input  wire        reset,
+    input  wire        wr_en,      // write enable
+    input  wire [31:0] d,
+    output reg  [31:0] q
+);
+    always @(posedge clk) begin
+        if (reset)
+            q <= 32'b0;
+        else if (wr_en)
+            q <= d;
+    end
+endmodule

@@ -1,0 +1,21 @@
+# Quartus generated
+db/
+incremental_db/
+simulation/
+*.qws
+*.rpt
+*.summary
+*.smsg
+*.sof
+*.pof
+*.jdi
+*.log
+
+# ModelSim generated
+work/
+transcript
+vsim.wlf
+
+# OS
+.DS_Store
+Thumbs.db

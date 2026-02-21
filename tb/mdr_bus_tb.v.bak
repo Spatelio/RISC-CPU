@@ -1,0 +1,156 @@
+`timescale 1ns/1ps
+
+module tb_mdr_bus;
+
+    reg clk;
+    reg reset;
+
+    reg [15:0] r_in;
+    reg        pc_in, ir_in, y_in, mar_in, hi_in, lo_in, zhi_in, zlo_in;
+
+    reg        mdr_in;
+    reg        mdr_out;
+    reg        read;
+    reg [31:0] mdatain;
+
+    reg [15:0] r_out;
+    reg        hi_out, lo_out, zhi_out, zlo_out, pc_out;
+
+    reg        in_port_out, c_out;
+    reg [31:0] in_port_value;
+    reg [31:0] c_signext;
+
+    wire [31:0] bus_out;
+    wire        bus_valid, bus_multi;
+    wire [31:0] mdr_q;
+
+    // DUT
+    datapath dut (
+        .clk(clk),
+        .reset(reset),
+
+        .r_in(r_in),
+        .pc_in(pc_in),
+        .ir_in(ir_in),
+        .y_in(y_in),
+        .mar_in(mar_in),
+        .hi_in(hi_in),
+        .lo_in(lo_in),
+        .zhi_in(zhi_in),
+        .zlo_in(zlo_in),
+
+        .mdr_in(mdr_in),
+        .mdr_out(mdr_out),
+        .read(read),
+        .mdatain(mdatain),
+
+        .r_out(r_out),
+        .hi_out(hi_out),
+        .lo_out(lo_out),
+        .zhi_out(zhi_out),
+        .zlo_out(zlo_out),
+        .pc_out(pc_out),
+
+        .in_port_out(in_port_out),
+        .c_out(c_out),
+        .in_port_value(in_port_value),
+        .c_signext(c_signext),
+
+        .bus_out(bus_out),
+        .bus_valid(bus_valid),
+        .bus_multi(bus_multi),
+        .mdr_q(mdr_q)
+    );
+
+    // 10ns period
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk;
+    end
+
+    //default all controls low
+    task clear_controls;
+    begin
+        r_in = 16'b0;
+        pc_in = 0; ir_in = 0; y_in = 0; mar_in = 0; hi_in = 0; lo_in = 0; zhi_in = 0; zlo_in = 0;
+
+        mdr_in = 0;
+        mdr_out = 0;
+        read = 0;
+
+        r_out = 16'b0;
+        hi_out = 0; lo_out = 0; zhi_out = 0; zlo_out = 0; pc_out = 0;
+
+        in_port_out = 0;
+        c_out = 0;
+
+        in_port_value = 32'b0;
+        c_signext = 32'b0;
+
+        mdatain = 32'b0;
+    end
+    endtask
+
+    // test sequence
+    initial begin
+        clear_controls();
+
+        //reset for 2 cycles
+        reset = 1;
+        repeat (2) @(posedge clk);
+        reset = 0;
+
+        // MDR loads from memory: Mdatain=0x00000034, Read=1, MDRin=1 for 1 cycle
+        @(negedge clk);
+        mdatain = 32'h0000_0034;
+        read    = 1'b1;     // select Mdatain into MDR
+        mdr_in  = 1'b1;     // enable MDR load
+
+        @(posedge clk);     // MDR should capture here
+
+        @(negedge clk);
+        mdr_in = 1'b0;      // stop loading
+        read   = 1'b0;
+
+        // check MDR value
+        #1;
+        if (mdr_q !== 32'h0000_0034) begin
+            $display("FAIL: MDR expected 0x00000034, got %h", mdr_q);
+            $stop;
+        end else begin
+            $display("PASS: MDR loaded from Mdatain = %h", mdr_q);
+        end
+
+        // step 2: Put MDR on bus (MDRout=1) and load into R5 (R5in=1) for 1 cycle
+        @(negedge clk);
+        mdr_out = 1'b1;     // drive MDR onto bus
+        r_in[5] = 1'b1;     // load R5 from bus
+
+        @(posedge clk);     // R5 should capture here
+
+        @(negedge clk);
+        mdr_out = 1'b0;
+        r_in[5] = 1'b0;
+
+        // Check R5 value via hierarchical reference (since we didn't expose r5 output)
+        // register_block has internal array R[0:15] assigned to outputs r0..r15,
+        // but in your current register_block it's also exposed as named outputs.
+        // In datapath.v we did NOT expose r5, so use hierarchy:
+        #1;
+        if (dut.u_regs.r5 !== 32'h0000_0034) begin
+            $display("FAIL: R5 expected 0x00000034, got %h", dut.u_regs.r5);
+            $stop;
+        end else begin
+            $display("PASS: R5 loaded from MDR via bus = %h", dut.u_regs.r5);
+        end
+
+        // Optional: confirm bus had only one driver in that step
+        if (bus_multi) begin
+            $display("WARNING: bus_multi asserted (multiple bus drivers) - check control signals.");
+        end
+
+        $display("ALL TESTS PASSED.");
+        $stop;
+    end
+
+endmodule
