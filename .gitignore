@@ -1,6 +1,7 @@
 # Quartus generated
 db/
 incremental_db/
+output_files/
 simulation/
 *.qws
 *.rpt
@@ -19,3 +20,6 @@ vsim.wlf
 # OS
 .DS_Store
 Thumbs.db
+
+# bak files
+*.bak
