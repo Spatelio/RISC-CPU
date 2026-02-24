@@ -120,7 +120,7 @@ module datapath_not_tb;
 
     initial begin
         $dumpfile("waves/not.vcd"); // Name of the output waveform file
-        $dumpvars(0, datapath_adder_tb); // 0 dumps all signals in the module and below
+        $dumpvars(0, datapath_not_tb); // 0 dumps all signals in the module and below
     end
     
     initial begin

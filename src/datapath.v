@@ -15,7 +15,7 @@ module datapath (
     input  wire        lo_in,
     input  wire        zhi_in,
     input  wire        zlo_in,
-	 
+	input  wire        pc_start,
 	 //alu opcode 
 	 input  wire [4:0]  alu_opcode,
 

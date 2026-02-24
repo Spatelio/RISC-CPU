@@ -20,12 +20,13 @@ module datapath_adder_tb;
     reg c_out;
     reg [31:0] in_port_value;
     reg [31:0] c_signext;
+    reg [31:0] pc_startval;
 
     // Outputs
     wire [31:0] bus_out;
     wire bus_valid, bus_multi;
     wire [31:0] mdr_q;
-
+    wire [31:0] pc_q;
     // Instantiate Datapath
     datapath uut (
         .clk(clk),
@@ -57,7 +58,8 @@ module datapath_adder_tb;
         .bus_out(bus_out),
         .bus_valid(bus_valid),
         .bus_multi(bus_multi),
-        .mdr_q(mdr_q)
+        .mdr_q(mdr_q),
+        .pc_in(pc_q)
     );
 
     always @(posedge clk) begin
@@ -90,12 +92,13 @@ module datapath_adder_tb;
                 mdatain = 32'b0;
                 in_port_out = 0; c_out = 0;
                 in_port_value = 32'b0; c_signext = 32'b0;
+                pc_q = 32'b0;
             end
             
             T0: reset = 0; // Release Reset
             
             T1: begin // Load 5 into MDR
-                mdatain = 32'h00000005;
+                mdatain = 32'h8ffffffd;
                 read = 1; mdr_in = 1;
             end
             
@@ -106,7 +109,7 @@ module datapath_adder_tb;
             
             T3: begin // Load 3 into MDR
                 mdr_out = 0; r_in[5] = 0;
-                mdatain = 32'h00000003; 
+                mdatain = 32'h0000000A; 
                 read = 1; mdr_in = 1;
             end
             

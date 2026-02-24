@@ -130,7 +130,7 @@ module datapath_and_tb;
             end
             
             T8: begin // Capture ALU result into ZLO
-                alu_opcode = 5'b00000; 
+                alu_opcode = 5'b00100; 
                 zlo_in = 1;
             end
             
@@ -147,7 +147,7 @@ module datapath_and_tb;
 
     initial begin
         $dumpfile("waves/and.vcd"); // Name of the output waveform file
-        $dumpvars(0, datapath_adder_tb); // 0 dumps all signals in the module and below
+        $dumpvars(0, datapath_and_tb); // 0 dumps all signals in the module and below
     end
     
     initial begin

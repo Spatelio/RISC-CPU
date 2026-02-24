@@ -25,8 +25,7 @@ for tb_file in $TB_DIR/*.v; do
         # Run simulation
         vvp "$BIN_DIR/$tb_name.vvp"
         
-        # Move the VCD file to the waveforms directory if it was created
-        # Note: This assumes your TB naming matches or you use a generic name
+        # Move the VCD file to the waveforms directory 
         if [ -f "$tb_name.vcd" ]; then
             mv "$tb_name.vcd" "$WAVE_DIR/"
         elif [ -f "simulation.vcd" ]; then
