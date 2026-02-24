@@ -6,21 +6,21 @@ module alu(
 );
 
     // Define operation codes
-    parameter ADD    = 5'b00000; //tbd
-    parameter SUB    = 5'b00001; //tbd
-    parameter MUL    = 5'b00010; //tbd
-    parameter DIV    = 5'b00011; //tbd
-    parameter AND    = 5'b00100; //tbd
-    parameter OR     = 5'b00101; //tbd
-    parameter SHR    = 5'b00110; //tbd
-    parameter SHRA   = 5'b00111; //tbd
-    parameter SHIFTL = 5'b01000; //tbd
-    parameter ROTR   = 5'b01001; //tbd
-    parameter ROTL   = 5'b01010; //tbd
-    parameter NEG    = 5'b01011; //tbd
-    parameter NOT    = 5'b01100; //tbd
+    parameter ADD    = 5'b00000; 
+    parameter SUB    = 5'b00001; 
+    parameter MUL    = 5'b00010; 
+    parameter DIV    = 5'b00011; 
+    parameter AND    = 5'b00100; 
+    parameter OR     = 5'b00101; 
+    parameter SHR    = 5'b00110; 
+    parameter SHRA   = 5'b00111; 
+    parameter SHIFTL = 5'b01000; 
+    parameter ROTR   = 5'b01001; 
+    parameter ROTL   = 5'b01010; 
+    parameter NEG    = 5'b01011; 
+    parameter NOT    = 5'b01100; 
 
-    // Wires for outputs from different functional units
+    // Wires for functional unit output
     wire [31:0] add_result;
     wire [31:0] sub_result;
     wire [63:0] mul_result;
@@ -35,96 +35,96 @@ module alu(
     wire [31:0] rotr_result;
     wire [31:0] rotl_result;
 
-    // Instantiate adder module 
+    // Instantiate unit modules
+    
     adder add_unit(
         .A(A),
         .B(B),
         .sum(add_result)
     );
 
-    // Instantiate subtractor module 
+
     subtractor sub_unit(
         .A(A),
         .B(B),
         .Result(sub_result)
     );
 
-    // Instantiate multiplier module 
+
     mult mul_unit(
         .a(A),
         .b(B),
         .z(mul_result)
     );
 
-    // Instantiate divider module 
+
     div div_unit(
         .dividend(A),
         .divisor(B),
         .z(div_result)
     );
 
-    // Instantiate logical AND module 
+
     and_ and_unit(
         .A(A),
         .B(B),
         .C(and_result)
     );
 
-    // Instantiate logical OR module 
+ 
     or_ or_unit(
         .A(A),
         .B(B),
         .C(or_result)
     );
 
-    // Instantiate logical NOT module 
+
     not_ not_unit(
         .A(A),
         .C(not_result)
     );
 
-    // Instantiate negate module 
+
     negate neg_unit(
         .A(A),
         .C(neg_result)
     );
 
-    // Instantiate shift right module 
+
     shiftr shr_unit(
         .A(A),
         .B(B),  
         .C(shr_result)
     );
 
-    // Instantiate shift right arithmetic module 
+
     shiftra shra_unit(
         .A(A),
         .B(B), 
         .C(shra_result)
     );
 
-    // Instantiate shift left module 
     shiftl shiftl_unit(
         .A(A),
         .B(B),
         .C(shiftl_result)
     );
 
-    // Instantiate rotate right module 
+
     rotr rotr_unit(
         .A(A),
         .B(B),
         .C(rotr_result)
     );
 
-    // Instantiate rotate left module 
+
     rotl rotl_unit(
         .A(A),
         .B(B),
         .C(rotl_result)
     );
 
-    // Select the appropriate output based on opcode
+    // Select the output based on opcode
     always @(*) begin
         case(opcode)
             ADD:       C = {32'b0, add_result};
