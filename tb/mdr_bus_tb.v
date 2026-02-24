@@ -145,7 +145,7 @@ module mdr_bus_tb;
         end
 
         $display("ALL TESTS PASSED.");
-        $stop;
+        $finish;
     end
 
 endmodule

@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-module datapath_adder_tb;    
+module datapath_or_tb;    
     parameter Default = 4'b0000, T0 = 4'b0001, T1 = 4'b0010, T2 = 4'b0011,
               T3 = 4'b0100, T4 = 4'b0101, T5 = 4'b0110, T6 = 4'b0111,
               T7 = 4'b1000, T8 = 4'b1001, T9 = 4'b1010, Stop = 4'b1011;
@@ -130,7 +130,7 @@ module datapath_adder_tb;
             end
             
             T8: begin // Capture ALU result into ZLO
-                alu_opcode = 5'b00000; 
+                alu_opcode = 5'b00101; 
                 zlo_in = 1;
             end
             

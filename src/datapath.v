@@ -52,9 +52,9 @@ module datapath (
     wire [31:0] pc, ir, y, mar, hi, lo;
     wire [31:0] zhi, zlo;
 	 
-	 wire [63:0] alu_result;
+	wire [63:0] alu_result;
 	 
-	 alu u_alu (
+	alu u_alu (
         .A(y),
         .B(bus_out),
         .opcode(alu_opcode),
@@ -79,6 +79,8 @@ module datapath (
         .zhi_in(zhi_in),
         .zlo_in(zlo_in),
 
+        .alu_in(alu_result),
+        
         .r0(r0), .r1(r1), .r2(r2), .r3(r3),
         .r4(r4), .r5(r5), .r6(r6), .r7(r7),
         .r8(r8), .r9(r9), .r10(r10), .r11(r11),

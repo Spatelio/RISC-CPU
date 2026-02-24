@@ -24,3 +24,7 @@ Thumbs.db
 # bak files
 *.bak
 *.txt
+*.vcd
+
+# macos sim stuff
+bin/

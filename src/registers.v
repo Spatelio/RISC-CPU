@@ -4,7 +4,8 @@ module registers (
 
     // datapath input
     input  wire [31:0] bus_in,
-
+    //alu input
+    input wire [63:0] alu_in,
     // gen purp regs write enables
     input  wire [15:0] r_in, //r_in[i] loads Ri from bus_in
 
@@ -92,7 +93,7 @@ module registers (
     reg32 u_lo  (.clk(clk), .reset(reset), .wr_en(lo_in),  .d(bus_in), .q(lo));
 
     // Z register split (ZHI/ZLO)
-    reg32 u_zhi (.clk(clk), .reset(reset), .wr_en(zhi_in), .d(bus_in), .q(zhi));
-    reg32 u_zlo (.clk(clk), .reset(reset), .wr_en(zlo_in), .d(bus_in), .q(zlo));
+    reg32 u_zhi (.clk(clk), .reset(reset), .wr_en(zhi_in), .d(alu_in[63:32]), .q(zhi));
+    reg32 u_zlo (.clk(clk), .reset(reset), .wr_en(zlo_in), .d(alu_in[31:0]),  .q(zlo));
 
 endmodule

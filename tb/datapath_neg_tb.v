@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-module datapath_adder_tb;    
+module datapath_neg_tb;    
     parameter Default = 4'b0000, T0 = 4'b0001, T1 = 4'b0010, T2 = 4'b0011,
               T3 = 4'b0100, T4 = 4'b0101, T5 = 4'b0110, T6 = 4'b0111,
               T7 = 4'b1000, T8 = 4'b1001, T9 = 4'b1010, Stop = 4'b1011;
@@ -68,11 +68,7 @@ module datapath_adder_tb;
             T2: Present_state <= T3;
             T3: Present_state <= T4;
             T4: Present_state <= T5;
-            T5: Present_state <= T6;
-            T6: Present_state <= T7;
-            T7: Present_state <= T8;
-            T8: Present_state <= T9;
-            T9: Present_state <= Stop;
+            T5: Present_state <= Stop;
             Stop: $finish;
         endcase
     end
@@ -99,54 +95,31 @@ module datapath_adder_tb;
                 read = 1; mdr_in = 1;
             end
             
-            T2: begin // MDR writes to Bus, R5 reads from Bus
+            T2: begin // MDR writes to Bus, R7 reads from Bus
                 read = 0; mdr_in = 0;
-                mdr_out = 1; r_in[5] = 1;
+                mdr_out = 1; r_in[7] = 1;
             end
             
-            T3: begin // Load 3 into MDR
-                mdr_out = 0; r_in[5] = 0;
-                mdatain = 32'h00000003; 
-                read = 1; mdr_in = 1;
+            T3: begin //  in r7 -> y
+                mdr_out = 0; r_in[7] = 0;
+                r_out[7] = 1; y_in = 1;
             end
             
-            T4: begin // MDR writes to Bus, R6 reads from bus
-                read = 0; mdr_in = 0;
-                mdr_out = 1; r_in[6] = 1;
-            end
-            
-            T5: begin // R6 -> Bus, Bus -> Y
-                mdr_out = 0; r_in[6] = 0;
-                r_out[5] = 1; y_in = 1; 
-            end
-            
-            T6: begin // R6 -> Bus
-                r_out[5] = 0; y_in = 0;
-                r_out[6] = 1; 
-            end
-            
-            T7: begin
-                // Wait 
-            end
-            
-            T8: begin // Capture ALU result into ZLO
-                alu_opcode = 5'b00000; 
+            T4: begin // y can do alu result, output in zlo
+                r_out[7] = 0; y_in = 0;
+                alu_opcode = 5'b01011;
                 zlo_in = 1;
             end
             
-            T9: begin // ZLO writes to Bus, R7 reads from Bus
-                zlo_in = 0; r_out[6] = 0; 
-                zlo_out = 1; r_in[2] = 1; 
-            end
-            
-            Stop: begin
-                zlo_out = 0; r_in[2] = 0;
+            T5: begin // zlo to r4
+                zlo_in = 0;
+                r_in[4] = 1; zlo_out = 1;
             end
         endcase
     end
 
     initial begin
-        $dumpfile("waves/add.vcd"); // Name of the output waveform file
+        $dumpfile("waves/neg.vcd"); // Name of the output waveform file
         $dumpvars(0, datapath_adder_tb); // 0 dumps all signals in the module and below
     end
     
