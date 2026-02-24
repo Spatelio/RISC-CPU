@@ -48,24 +48,43 @@ set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
+set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim (Verilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
-set_global_assignment -name VERILOG_FILE src/reg32.v
-set_global_assignment -name VERILOG_FILE src/registers.v
-set_global_assignment -name VERILOG_FILE src/datapath.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH datapath_add_tb -section_id eda_simulation
+set_global_assignment -name EDA_TEST_BENCH_NAME mdr_bus_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id mdr_bus_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME mdr_bus_tb -section_id mdr_bus_tb
+set_global_assignment -name VERILOG_FILE tb/datapath_add_tb.v
+set_global_assignment -name VERILOG_FILE src/sub.v
+set_global_assignment -name VERILOG_FILE src/shiftra.v
+set_global_assignment -name VERILOG_FILE src/shiftr.v
+set_global_assignment -name VERILOG_FILE src/shiftl.v
+set_global_assignment -name VERILOG_FILE src/rotr.v
+set_global_assignment -name VERILOG_FILE src/rotl.v
+set_global_assignment -name VERILOG_FILE src/rca.v
+set_global_assignment -name VERILOG_FILE src/or.v
+set_global_assignment -name VERILOG_FILE src/not.v
+set_global_assignment -name VERILOG_FILE src/neg.v
+set_global_assignment -name VERILOG_FILE src/mult.v
+set_global_assignment -name VERILOG_FILE src/div.v
+set_global_assignment -name VERILOG_FILE src/and.v
+set_global_assignment -name VERILOG_FILE src/alu.v
+set_global_assignment -name VERILOG_FILE src/reg32.v
+set_global_assignment -name VERILOG_FILE src/registers.v
+set_global_assignment -name VERILOG_FILE src/datapath.v
 set_global_assignment -name VERILOG_FILE src/encoder32to5.v
 set_global_assignment -name VERILOG_FILE src/bus_mux32.v
 set_global_assignment -name VERILOG_FILE src/bus.v
 set_global_assignment -name VERILOG_FILE src/mdr.v
 set_global_assignment -name VERILOG_FILE tb/mdr_bus_tb.v
-set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH mdr_bus_tb -section_id eda_simulation
-set_global_assignment -name EDA_TEST_BENCH_NAME mdr_bus_tb -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id mdr_bus_tb
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME mdr_bus_tb -section_id mdr_bus_tb
+set_global_assignment -name EDA_TEST_BENCH_NAME datapath_add_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id datapath_add_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME datapath_adder_tb -section_id datapath_add_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE tb/mdr_bus_tb.v -section_id mdr_bus_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE tb/datapath_add_tb.v -section_id datapath_add_tb
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

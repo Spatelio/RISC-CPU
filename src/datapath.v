@@ -15,6 +15,9 @@ module datapath (
     input  wire        lo_in,
     input  wire        zhi_in,
     input  wire        zlo_in,
+	 
+	 //alu opcode 
+	 input  wire [4:0]  alu_opcode,
 
     // MDR controls for phase 1
     input  wire        mdr_in, // MDRin
@@ -48,6 +51,15 @@ module datapath (
     wire [31:0] r8, r9, r10, r11, r12, r13, r14, r15;
     wire [31:0] pc, ir, y, mar, hi, lo;
     wire [31:0] zhi, zlo;
+	 
+	 wire [63:0] alu_result;
+	 
+	 alu u_alu (
+        .A(y),
+        .B(bus_out),
+        .opcode(alu_opcode),
+        .C(alu_result)
+    );
 
     // register block loads from bus_out
     registers u_regs (
