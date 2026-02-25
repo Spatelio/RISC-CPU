@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-module datapath_adder_tb;    
+module datapath_shiftl_tb;    
     parameter Default = 4'b0000, T0 = 4'b0001, T1 = 4'b0010, T2 = 4'b0011,
               T3 = 4'b0100, T4 = 4'b0101, T5 = 4'b0110, T6 = 4'b0111,
               T7 = 4'b1000, T8 = 4'b1001, T9 = 4'b1010, Stop = 4'b1011;
@@ -20,13 +20,12 @@ module datapath_adder_tb;
     reg c_out;
     reg [31:0] in_port_value;
     reg [31:0] c_signext;
-    reg [31:0] pc_startval;
 
     // Outputs
     wire [31:0] bus_out;
     wire bus_valid, bus_multi;
     wire [31:0] mdr_q;
-    wire [31:0] pc_q;
+
     // Instantiate Datapath
     datapath uut (
         .clk(clk),
@@ -96,7 +95,7 @@ module datapath_adder_tb;
             T0: reset = 0; // Release Reset
             
             T1: begin // Load 5 into MDR
-                mdatain = 32'h00000003;
+                mdatain = 32'h00000004;
                 read = 1; mdr_in = 1;
             end
             
@@ -107,7 +106,7 @@ module datapath_adder_tb;
             
             T3: begin // Load 3 into MDR
                 mdr_out = 0; r_in[5] = 0;
-                mdatain = 32'h0000000A; 
+                mdatain = 32'h00000003; 
                 read = 1; mdr_in = 1;
             end
             
@@ -131,7 +130,7 @@ module datapath_adder_tb;
             end
             
             T8: begin // Capture ALU result into ZLO
-                alu_opcode = 5'b00000; 
+                alu_opcode = 5'b01000; 
                 zlo_in = 1;
             end
             
@@ -147,8 +146,8 @@ module datapath_adder_tb;
     end
 
     initial begin
-        $dumpfile("waves/add.vcd"); // Name of the output waveform file
-        $dumpvars(0, datapath_adder_tb); // 0 dumps all signals in the module and below
+        $dumpfile("waves/shiftl.vcd"); // Name of the output waveform file
+        $dumpvars(0, datapath_shiftl_tb); // 0 dumps all signals in the module and below
     end
     
     initial begin
