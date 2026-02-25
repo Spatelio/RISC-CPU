@@ -3,7 +3,7 @@
 module datapath_div_tb;    
     parameter Default = 4'b0000, T0 = 4'b0001, T1 = 4'b0010, T2 = 4'b0011,
               T3 = 4'b0100, T4 = 4'b0101, T5 = 4'b0110, T6 = 4'b0111,
-              T7 = 4'b1000, T8 = 4'b1001, T9 = 4'b1010, Stop = 4'b1011;
+              T7 = 4'b1000, T8 = 4'b1001, T9 = 4'b1010, T10 = 4'b1011, Stop = 4'b1100;
     
     reg [3:0] Present_state = Default;
      
@@ -72,7 +72,8 @@ module datapath_div_tb;
             T6: Present_state <= T7;
             T7: Present_state <= T8;
             T8: Present_state <= T9;
-            T9: Present_state <= Stop;
+            T9: Present_state <= T10;
+            T10: Present_state <= Stop;
             Stop: $finish;
         endcase
     end
@@ -95,7 +96,7 @@ module datapath_div_tb;
             T0: reset = 0; // Release Reset
             
             T1: begin // Load 15 into MDR
-                mdatain = 32'h00000003;
+                mdatain = 'd15;
                 read = 1; mdr_in = 1;
             end
             
@@ -106,7 +107,7 @@ module datapath_div_tb;
             
             T3: begin // Load 3 into MDR
                 mdr_out = 0; r_in[5] = 0;
-                mdatain = 32'h00000015; 
+                mdatain = 32'h00000003; 
                 read = 1; mdr_in = 1;
             end
             
@@ -139,9 +140,14 @@ module datapath_div_tb;
                 zlo_in = 0; r_out[6] = 0; zhi_in = 0;
                 zlo_out = 1; r_in[2] = 1; 
             end
+
+            T10: begin //zhi writes to bus just so i can see
+                r_in[2] = 0; zlo_out = 0;
+                zhi_out = 1; 
+            end
             
             Stop: begin
-                zlo_out = 0; r_in[2] = 0;
+                zhi_out = 0;
             end
         endcase
     end

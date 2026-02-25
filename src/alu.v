@@ -61,7 +61,7 @@ module alu(
     div div_unit(
         .dividend(A),
         .divisor(B),
-        .z(div_result)
+        .res(div_result)
     );
 
 
