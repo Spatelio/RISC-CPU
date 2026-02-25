@@ -61,6 +61,15 @@ module datapath (
         .C(alu_result)
     );
 
+    pc_unit u_pc (
+        .clk        (clk),
+        .reset      (reset),
+        .pc_write   (pc_in),        // From datapath input for now
+        .target_addr(bus_out),      // for jump and br
+        .sel_target (pc_start),     // 0 = Increment (PC+4), 1 = Jump (Target)
+        .pc_out     (pc)            
+    );
+
     // register block loads from bus_out
     registers u_regs (
         .clk   (clk),
@@ -69,7 +78,6 @@ module datapath (
 
         .r_in  (r_in),
 
-        .pc_in (pc_in),
         .ir_in (ir_in),
         .y_in  (y_in),
         .mar_in(mar_in),

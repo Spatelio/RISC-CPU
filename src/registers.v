@@ -85,7 +85,6 @@ module registers (
     assign r15 = R[15];
 
     // Special registers
-    reg32 u_pc  (.clk(clk), .reset(reset), .wr_en(pc_in),  .d(bus_in), .q(pc));
     reg32 u_ir  (.clk(clk), .reset(reset), .wr_en(ir_in),  .d(bus_in), .q(ir));
     reg32 u_y   (.clk(clk), .reset(reset), .wr_en(y_in),   .d(bus_in), .q(y));
     reg32 u_mar (.clk(clk), .reset(reset), .wr_en(mar_in), .d(bus_in), .q(mar));
