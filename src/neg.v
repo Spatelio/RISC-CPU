@@ -16,7 +16,7 @@ module negate(
     //Add 1 using a Carry 
     assign carry[0] = 1'b1;
 
-    generate //ripple carry adder 
+    generate //ripple carry adder to add 1
         for (i = 0; i < 32; i = i + 1) begin : add_one_loop
             assign C[i] = inverted_A[i] ^ carry[i];
             
