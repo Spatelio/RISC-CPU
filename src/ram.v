@@ -1,0 +1,21 @@
+module ram (
+    input wire read,
+    input wire write,
+    input wire clk,
+    input wire[31:0] dataIn,
+    input wire[8:0] addrIn,
+    output reg[31:0] dataOut //we'll do sync ram
+);
+
+reg[31:0] memData[511:0];
+
+always @(posedge clk) begin
+    if(write) begin
+        memData[addrIn] <= dataIn;
+    end
+    if (read) begin
+        dataOut <= memData[addrIn];
+    end
+end
+
+endmodule 
