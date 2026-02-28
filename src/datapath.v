@@ -43,7 +43,9 @@ module datapath (
     output wire [31:0] bus_out, //BusMuxOut
     output wire        bus_valid,
     output wire        bus_multi,
-    output wire [31:0] mdr_q //expose MDR contents
+    output wire [31:0] mdr_q, //expose MDR contents
+
+    input wire write //for ram 
 );
 
     // internal register wires
@@ -53,6 +55,9 @@ module datapath (
     wire [31:0] zhi, zlo;
 	 
 	wire [63:0] alu_result;
+
+    //internal ram wire
+    wire [31:0] ram_data_out;
 	 
 	alu u_alu (
         .A(y),
@@ -108,8 +113,17 @@ module datapath (
         .mdr_in     (mdr_in),
         .read       (read),
         .bus_mux_out(bus_out),
-        .mdatain    (mdatain),
+        .mdatain    (ram_data_out),
         .q          (mdr_q)
+    );
+
+    ram u_ram(
+        .clk(clk),
+        .read(read),
+        .write(write),
+        .dataIn(mdr_q),  // mdr data
+        .dataOut(ram_data_out),
+        .addrIn(mar[8:0]) 
     );
 
     // bus

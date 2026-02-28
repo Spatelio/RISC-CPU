@@ -2,9 +2,9 @@
 
 # Directory setup
 SRC_DIR="src"
-TB_DIR="tb"
+TB_DIR="tb/p2"
 BIN_DIR="bin"
-WAVE_DIR="waves"
+WAVE_DIR="waves/p2"
 
 # Create directories if they don't exist
 mkdir -p $BIN_DIR
