@@ -60,6 +60,7 @@ module datapath (
         .ir_in(ir_in), .y_in(y_in), .mar_in(mar_in),
         .hi_in(hi_in), .lo_in(lo_in), .zhi_in(zhi_in), .zlo_in(zlo_in),
         .alu_in(alu_result),
+        .ba_out(ba_out), //ba logic in registers now
         .r0(r0), .r1(r1), .r2(r2), .r3(r3), .r4(r4), .r5(r5), .r6(r6), .r7(r7),
         .r8(r8), .r9(r9), .r10(r10), .r11(r11), .r12(r12), .r13(r13), .r14(r14), .r15(r15),
         .pc(pc), .ir(ir_val), .y(y), .mar(mar), .hi(hi), .lo(lo), .zhi(zhi), .zlo(zlo)

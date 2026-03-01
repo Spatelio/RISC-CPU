@@ -2,7 +2,7 @@ module selectencode(
     input wire [31:0] irIn,
     input wire gra, grb, grc,
     input wire selectIn, selectOut,
-    input wire BAout, //for 0s
+    input wire BAout, //for 0s or reg
     output wire [15:0] regOut,
     output wire [15:0] regIn,
     output wire [31:0] c_sign_extended
@@ -22,7 +22,7 @@ module selectencode(
 
     // these wires get connected to our actual register inout signals in datapath
     assign regIn  = selectIn  ? decoded : 16'h0000;
-    assign regOut = selectOut ? decoded : 16'h0000;
+    assign regOut = (selectOut | BAout) ? decoded : 16'h0000;
 
     assign c_sign_extended = c_signext;
 

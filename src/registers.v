@@ -21,6 +21,8 @@ module registers (
     input  wire        zhi_in,
     input  wire        zlo_in,
 
+    input wire ba_out,
+
     // outputs
     output wire [31:0] r0,
     output wire [31:0] r1,
@@ -53,9 +55,21 @@ module registers (
 	// internal register array
     wire [31:0] R [0:15];
 
+    wire [31:0] r0_internal_q;
+
+    reg32 u_reg0 (
+        .clk   (clk),
+        .reset (reset),
+        .wr_en (r_in[0]),
+        .d     (bus_in),
+        .q     (r0_internal_q)
+    );
+
+    assign R[0] = (ba_out) ? 32'b0 : r0_internal_q;
+
     genvar i;
     generate
-        for (i = 0; i < 16; i = i + 1) begin : GEN_REGS
+        for (i = 1; i < 16; i = i + 1) begin : GEN_REGS
             reg32 u_reg (
                 .clk   (clk),
                 .reset (reset),
