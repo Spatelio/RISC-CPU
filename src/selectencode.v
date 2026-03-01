@@ -4,7 +4,8 @@ module selectencode(
     input wire selectIn, selectOut,
     input wire BAout, //for 0s
     output wire [15:0] regOut,
-    output wire [15:0] regIn
+    output wire [15:0] regIn,
+    output wire [31:0] c_sign_extended
 );
 
     wire [3:0] ra = irIn[26:23]; // given bit fields
@@ -17,9 +18,12 @@ module selectencode(
 
     //4 bit selection into a 16 bit signal
     wire [15:0] decoded = 16'h0001 << selectedReg;
+    wire [31:0] c_signext = {{13{irIn[18]}}, irIn[18:0]};
 
     // these wires get connected to our actual register inout signals in datapath
     assign regIn  = selectIn  ? decoded : 16'h0000;
     assign regOut = selectOut ? decoded : 16'h0000;
+
+    assign c_sign_extended = c_signext;
 
 endmodule

@@ -38,6 +38,8 @@ module datapath (
     wire [63:0] alu_result;
     wire [31:0] ram_data_out;
 
+    wire [31:0] c_sign_extended;
+
     // Select and Encode Logic Instance
     selectencode u_select_encode (
         .irIn(ir_val),          // Connected to output of IR register
@@ -46,12 +48,10 @@ module datapath (
         .selectOut(rout), 
         .BAout(ba_out), 
         .regIn(internal_r_in),  // Feeds u_regs.r_in
-        .regOut(internal_r_out) // Feeds u_bus.r_out
+        .regOut(internal_r_out), // Feeds u_bus.r_out
+        .c_sign_extended(c_sign_extended) //feeds u_bus.cout?
     );
 
-    // Sign Extension Logic
-    // Constant C is in IR[18:0], bit 18 is the sign bit 
-    wire [31:0] c_signext = {{13{ir_val[18]}}, ir_val[18:0]};
 
     // Register Block
     registers u_regs (
@@ -86,7 +86,7 @@ module datapath (
         .r8(r8), .r9(r9), .r10(r10), .r11(r11),
         .r12(r12), .r13(r13), .r14(r14), .r15(r15),
         .hi(hi), .lo(lo), .zhi(zhi), .zlo(zlo), .pc(pc), .mdr(mdr_q),
-        .in_port(in_port_value), .c_signext(c_signext),
+        .in_port(in_port_value), .c_signext(c_sign_extended),
         .r_out(internal_r_out), // Driven by decoder
         .hi_out(hi_out), .lo_out(lo_out), .zhi_out(zhi_out), .zlo_out(zlo_out),
         .pc_out(pc_out), .mdr_out(mdr_out), .in_port_out(in_port_out), .c_out(c_out),
