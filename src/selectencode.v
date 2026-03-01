@@ -1,0 +1,25 @@
+module selectencode(
+    input wire [31:0] irIn,
+    input wire gra, grb, grc,
+    input wire selectIn, selectOut,
+    input wire BAout, //for 0s
+    output wire [15:0] regOut,
+    output wire [15:0] regIn
+);
+
+    wire [3:0] ra = irIn[26:23]; // given bit fields
+    wire [3:0] rb = irIn[22:19];
+    wire [3:0] rc = irIn[18:15];
+
+    wire [3:0] selectedReg = gra ? ra :
+                             grb ? rb :
+                             grc ? rc : 4'b0000;
+
+    //4 bit selection into a 16 bit signal
+    wire [15:0] decoded = 16'h0001 << selectedReg;
+
+    // these wires get connected to our actual register inout signals in datapath
+    assign regIn  = selectIn  ? decoded : 16'h0000;
+    assign regOut = selectOut ? decoded : 16'h0000;
+
+endmodule
