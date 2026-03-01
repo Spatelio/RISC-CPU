@@ -1,124 +1,128 @@
-
-//phase 1 - Mdatain is driven by testbench
-
 module datapath (
     input  wire        clk,
     input  wire        reset,
 
-    // register write enables (Rin)
-    input  wire [15:0] r_in,
-    input  wire        pc_in,
-    input  wire        ir_in,
-    input  wire        y_in,
-    input  wire        mar_in,
-    input  wire        hi_in,
-    input  wire        lo_in,
-    input  wire        zhi_in,
-    input  wire        zlo_in,
+    // Select and Encode Controls (Replacing old r_in/r_out)
+    input  wire        gra, grb, grc,
+    input  wire        rin, rout, ba_out, 
 
-    // MDR controls for phase 1
-    input  wire        mdr_in, // MDRin
-    input  wire        mdr_out, // MDRout - bus source control
-    input  wire        read, // selects Mdatain into MDR
-    input  wire [31:0] mdatain,
+    // Remaining Phase 1 register enables
+    input  wire        pc_in, ir_in, y_in, mar_in, 
+    input  wire        hi_in, lo_in, zhi_in, zlo_in,
+    input  wire        pc_start,
+    
+    //for bus
+    input  wire        zhi_out, zlo_out,
+    input  wire [4:0]  alu_opcode, // manually written right now since i types reuse
 
-    // bus source controls =====
-    input  wire [15:0] r_out,
-    input  wire        hi_out,
-    input  wire        lo_out,
-    input  wire        zhi_out,
-    input  wire        zlo_out,
-    input  wire        pc_out,
+    // MDR and RAM Controls
+    input  wire        mdr_in, mdr_out, read, write,
 
-    // for phase 2 logic and i/o
-    input  wire        in_port_out,
-    input  wire        c_out,
-    input  wire [31:0] in_port_value,
-    input  wire [31:0] c_signext,
+    // I/O and Constant Controls
+    input  wire        in_port_out, c_out,
+    input  wire [31:0] in_port_data_in,
+    input  wire        out_port_in,
+    output wire [31:0] out_port_data_out,
 
-    // simulkation outpuits
-    output wire [31:0] bus_out, //BusMuxOut
-    output wire        bus_valid,
-    output wire        bus_multi,
-    output wire [31:0] mdr_q //expose MDR contents
+    // Outputs for simulation
+    output wire [31:0] bus_out,
+    output wire [31:0] mdr_q,
+    //conff io
+    input  wire        con_in,
+    output wire        con_ff_out
+
 );
 
-    // internal register wires
+    // Internal wires for register selection
+    wire [15:0] internal_r_in;
+    wire [15:0] internal_r_out;
+    wire [31:0] ir_val; // To feed the decoder from IR register
+
+    // internal register signals
     wire [31:0] r0, r1, r2, r3, r4, r5, r6, r7;
     wire [31:0] r8, r9, r10, r11, r12, r13, r14, r15;
-    wire [31:0] pc, ir, y, mar, hi, lo;
-    wire [31:0] zhi, zlo;
+    wire [31:0] pc, y, mar, hi, lo, zhi, zlo;
+    wire [63:0] alu_result;
+    wire [31:0] ram_data_out;
 
-    // register block loads from bus_out
+    wire [31:0] c_sign_extended;
+
+    // Select and Encode Logic Instance
+    selectencode u_select_encode (
+        .irIn(ir_val),          // Connected to output of IR register
+        .gra(gra), .grb(grb), .grc(grc),
+        .selectIn(rin),         // Driven by control unit/TB
+        .selectOut(rout), 
+        .BAout(ba_out), 
+        .regIn(internal_r_in),  // Feeds u_regs.r_in
+        .regOut(internal_r_out), // Feeds u_bus.r_out
+        .c_sign_extended(c_sign_extended) //feeds u_bus.c_sign_ext when c_out is high
+    );
+
+    wire [31:0] in_port_q;
+
+    reg32 u_inport(
+        .clk(clk),
+        .reset(reset),
+        .wr_en(1'b1),
+        .d(in_port_data_in),
+        .q(in_port_q)
+    );
+
+    reg32 u_outport(
+        .clk(clk),
+        .reset(reset),
+        .wr_en(out_port_in),
+        .d(bus_out),
+        .q(out_port_data_out)
+    );
+    // Register Block
     registers u_regs (
-        .clk   (clk),
-        .reset (reset),
-        .bus_in(bus_out),
+        .clk(clk), .reset(reset), .bus_in(bus_out),
+        .r_in(internal_r_in),   // Driven by decoder
+        .ir_in(ir_in), .y_in(y_in), .mar_in(mar_in),
+        .hi_in(hi_in), .lo_in(lo_in), .zhi_in(zhi_in), .zlo_in(zlo_in),
+        .alu_in(alu_result),
+        .ba_out(ba_out), //ba logic in registers now
+        .r0(r0), .r1(r1), .r2(r2), .r3(r3), .r4(r4), .r5(r5), .r6(r6), .r7(r7),
+        .r8(r8), .r9(r9), .r10(r10), .r11(r11), .r12(r12), .r13(r13), .r14(r14), .r15(r15),
+        .pc(pc), .ir(ir_val), .y(y), .mar(mar), .hi(hi), .lo(lo), .zhi(zhi), .zlo(zlo)
+    );
 
-        .r_in  (r_in),
+    conff u_conff (
+        .bus_in(bus_out),       // Checks value on the bus
+        .irIn(ir_val[20:19]),   // Checks C2 field (bits 19, 20)
+        .con_in(con_in),        // Control signal from Testbench
+        .clk(clk),
+        .reset(reset),
+        .q(con_ff_out)          // Output to Testbench/Control Unit
+    );
 
-        .pc_in (pc_in),
-        .ir_in (ir_in),
-        .y_in  (y_in),
-        .mar_in(mar_in),
-        .hi_in (hi_in),
-        .lo_in (lo_in),
+    // Memory Subsystem
+    mdr u_mdr (
+        .clk(clk), .reset(reset), .mdr_in(mdr_in), .read(read),
+        .bus_mux_out(bus_out), .mdatain(ram_data_out), .q(mdr_q)
+    );
 
-        .zhi_in(zhi_in),
-        .zlo_in(zlo_in),
+    ram u_ram(
+        .clk(clk), .read(read), .write(write),
+        .dataIn(mdr_q), .dataOut(ram_data_out), .addrIn(mar[8:0]) 
+    );
 
-        .r0(r0), .r1(r1), .r2(r2), .r3(r3),
+    bus u_bus (
+        .r0(r0), .r1(r1), .r2(r2), .r3(r3), //
         .r4(r4), .r5(r5), .r6(r6), .r7(r7),
         .r8(r8), .r9(r9), .r10(r10), .r11(r11),
         .r12(r12), .r13(r13), .r14(r14), .r15(r15),
-
-        .pc(pc), .ir(ir), .y(y), .mar(mar),
-        .hi(hi), .lo(lo),
-
-        .zhi(zhi), .zlo(zlo)
+        .hi(hi), .lo(lo), .zhi(zhi), .zlo(zlo), .pc(pc), .mdr(mdr_q),
+        .in_port(in_port_q), .c_signext(c_sign_extended),
+        .r_out(internal_r_out), // Driven by decoder
+        .hi_out(hi_out), .lo_out(lo_out), .zhi_out(zhi_out), .zlo_out(zlo_out),
+        .pc_out(pc_out), .mdr_out(mdr_out), .in_port_out(in_port_out), .c_out(c_out),
+        .bus_out(bus_out)
     );
 
-    // MDR
-    // MDR can load from bus_out or mdatain
-    mdr u_mdr (
-        .clk        (clk),
-        .reset      (reset),
-        .mdr_in     (mdr_in),
-        .read       (read),
-        .bus_mux_out(bus_out),
-        .mdatain    (mdatain),
-        .q          (mdr_q)
-    );
-
-    // bus
-    bus u_bus (
-        .r0(r0),   .r1(r1),   .r2(r2),   .r3(r3),
-        .r4(r4),   .r5(r5),   .r6(r6),   .r7(r7),
-        .r8(r8),   .r9(r9),   .r10(r10), .r11(r11),
-        .r12(r12), .r13(r13), .r14(r14), .r15(r15),
-
-        .hi(hi),
-        .lo(lo),
-        .zhi(zhi),
-        .zlo(zlo),
-        .pc(pc),
-        .mdr(mdr_q),
-        .in_port(in_port_value),
-        .c_signext(c_signext),
-
-        .r_out(r_out),
-        .hi_out(hi_out),
-        .lo_out(lo_out),
-        .zhi_out(zhi_out),
-        .zlo_out(zlo_out),
-        .pc_out(pc_out),
-        .mdr_out(mdr_out),
-        .in_port_out(in_port_out),
-        .c_out(c_out),
-
-        .bus_out(bus_out),
-        .bus_valid(bus_valid),
-        .bus_multi(bus_multi)
-    );
+    // ALU instance remains the same
+    alu u_alu (.A(y), .B(bus_out), .opcode(alu_opcode), .C(alu_result));
 
 endmodule

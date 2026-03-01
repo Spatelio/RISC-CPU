@@ -4,7 +4,8 @@ module registers (
 
     // datapath input
     input  wire [31:0] bus_in,
-
+    //alu input
+    input wire [63:0] alu_in,
     // gen purp regs write enables
     input  wire [15:0] r_in, //r_in[i] loads Ri from bus_in
 
@@ -19,6 +20,8 @@ module registers (
     // Z register write enables
     input  wire        zhi_in,
     input  wire        zlo_in,
+
+    input wire ba_out,
 
     // outputs
     output wire [31:0] r0,
@@ -52,9 +55,21 @@ module registers (
 	// internal register array
     wire [31:0] R [0:15];
 
+    wire [31:0] r0_internal_q;
+
+    reg32 u_reg0 (
+        .clk   (clk),
+        .reset (reset),
+        .wr_en (r_in[0]),
+        .d     (bus_in),
+        .q     (r0_internal_q)
+    );
+
+    assign R[0] = (ba_out) ? 32'b0 : r0_internal_q;
+
     genvar i;
     generate
-        for (i = 0; i < 16; i = i + 1) begin : GEN_REGS
+        for (i = 1; i < 16; i = i + 1) begin : GEN_REGS
             reg32 u_reg (
                 .clk   (clk),
                 .reset (reset),
@@ -84,7 +99,6 @@ module registers (
     assign r15 = R[15];
 
     // Special registers
-    reg32 u_pc  (.clk(clk), .reset(reset), .wr_en(pc_in),  .d(bus_in), .q(pc));
     reg32 u_ir  (.clk(clk), .reset(reset), .wr_en(ir_in),  .d(bus_in), .q(ir));
     reg32 u_y   (.clk(clk), .reset(reset), .wr_en(y_in),   .d(bus_in), .q(y));
     reg32 u_mar (.clk(clk), .reset(reset), .wr_en(mar_in), .d(bus_in), .q(mar));
@@ -92,7 +106,7 @@ module registers (
     reg32 u_lo  (.clk(clk), .reset(reset), .wr_en(lo_in),  .d(bus_in), .q(lo));
 
     // Z register split (ZHI/ZLO)
-    reg32 u_zhi (.clk(clk), .reset(reset), .wr_en(zhi_in), .d(bus_in), .q(zhi));
-    reg32 u_zlo (.clk(clk), .reset(reset), .wr_en(zlo_in), .d(bus_in), .q(zlo));
+    reg32 u_zhi (.clk(clk), .reset(reset), .wr_en(zhi_in), .d(alu_in[63:32]), .q(zhi));
+    reg32 u_zlo (.clk(clk), .reset(reset), .wr_en(zlo_in), .d(alu_in[31:0]),  .q(zlo));
 
 endmodule
