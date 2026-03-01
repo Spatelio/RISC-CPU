@@ -20,6 +20,7 @@ module alu(
     parameter MUL    = 5'b01101; // 
     parameter NEG    = 5'b01110; // 
     parameter NOT    = 5'b01111; // 
+    parameter INC    = 5'b10000;
 
     // Wires for functional unit output
     wire [31:0] add_result;
@@ -35,6 +36,7 @@ module alu(
     wire [31:0] shiftl_result;
     wire [31:0] rotr_result;
     wire [31:0] rotl_result;
+    wire [31:0] inc_result; 
 
     // Instantiate unit modules
     
@@ -125,6 +127,11 @@ module alu(
         .C(rotl_result)
     );
 
+    pcinc pcinc_unit(
+        .B(B),
+        .sum(inc_result)
+    );
+
     // Select the output based on opcode
     always @(*) begin
         case(opcode)
@@ -141,6 +148,7 @@ module alu(
             ROTL:      C = {32'b0, rotl_result};
             NEG:       C = {32'b0, neg_result};
             NOT:       C = {32'b0, not_result};
+            INC:       C = {32'b0, inc_result};
             default:   C = 64'b0;
         endcase
     end

@@ -9,7 +9,7 @@ module datapath (
     // Remaining Phase 1 register enables
     input  wire        pc_in, ir_in, y_in, mar_in, 
     input  wire        hi_in, lo_in, zhi_in, zlo_in,
-    input  wire        pc_start,
+    input  wire        pc_out,
     
     //for bus
     input  wire        zhi_out, zlo_out,

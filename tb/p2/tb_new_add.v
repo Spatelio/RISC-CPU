@@ -19,7 +19,7 @@ module tb_new_add;
     reg clk, reset;
     reg gra, grb, grc, rin, rout, ba_out;
     reg pc_in, ir_in, y_in, mar_in, hi_in, lo_in, zhi_in, zlo_in;
-    reg pc_start, mdr_in, mdr_out, read, write, pc_out, c_out;
+    reg mdr_in, mdr_out, read, write, pc_out, c_out;
     
     // I/O & CON Signals
     reg in_port_out;
@@ -42,7 +42,7 @@ module tb_new_add;
         .gra(gra), .grb(grb), .grc(grc), .rin(rin), .rout(rout), .ba_out(ba_out),
         .pc_in(pc_in), .ir_in(ir_in), .y_in(y_in), .mar_in(mar_in),
         .hi_in(hi_in), .lo_in(lo_in), .zhi_in(zhi_in), .zlo_in(zlo_in),
-        .pc_start(pc_start), .alu_opcode(alu_opcode),
+        .alu_opcode(alu_opcode),
         .mdr_in(mdr_in), .mdr_out(mdr_out), .read(read), .write(write),
         .in_port_out(in_port_out), .c_out(c_out), 
         .zhi_out(zhi_out), .zlo_out(zlo_out),
@@ -81,7 +81,7 @@ module tb_new_add;
         // Reset controls
         {gra, grb, grc, rin, rout, ba_out} = 0;
         {pc_in, ir_in, y_in, mar_in, hi_in, lo_in, zhi_in, zlo_in} = 0;
-        {pc_start, mdr_in, mdr_out, read, write, pc_out, c_out} = 0;
+        {mdr_in, mdr_out, read, write, pc_out, c_out} = 0;
         {in_port_out, out_port_in, con_in} = 0;
         {zlo_out, zhi_out} = 0;
         alu_opcode = 5'b00000;
