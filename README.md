@@ -107,11 +107,11 @@ Shifts & Rotates
 
 - [x] Branch Logic: Decodes IR<22..19> (C2 field) and Bus data to determine if branch condition (Zero, NonZero, Positive, Negative) is met. 
 
-- [ ] Input/Output Ports:
+- [x] Input/Output Ports:
 
-- [ ] Input Port: 32-bit register with connection to Bus (BusMuxIn_In.Port). 
+- [x] Input Port: 32-bit register with connection to Bus (BusMuxIn_In.Port). 
 
-- [ ] Output Port: 32-bit register capturing data from Bus (BusMuxOut).
+- [x] Output Port: 32-bit register capturing data from Bus (BusMuxOut).
  #### Testbenches
  - [ ] ld (Load Direct): ld R7, 0x65 (Preload Mem[0x65]=0x84). Verify R7 gets 0x84. 
 

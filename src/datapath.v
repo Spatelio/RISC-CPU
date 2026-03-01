@@ -20,7 +20,9 @@ module datapath (
 
     // I/O and Constant Controls
     input  wire        in_port_out, c_out,
-    input  wire [31:0] in_port_value,
+    input  wire [31:0] in_port_data_in,
+    input  wire        out_port_in,
+    output wire [31:0] out_port_data_out,
 
     // Outputs for simulation
     output wire [31:0] bus_out,
@@ -57,7 +59,23 @@ module datapath (
         .c_sign_extended(c_sign_extended) //feeds u_bus.c_sign_ext when c_out is high
     );
 
+    wire [31:0] in_port_q;
 
+    reg32 u_inport(
+        .clk(clk),
+        .reset(reset),
+        .wr_en(1'b1),
+        .d(in_port_data_in),
+        .q(in_port_q)
+    );
+
+    reg32 u_outport(
+        .clk(clk),
+        .reset(reset),
+        .wr_en(out_port_in),
+        .d(bus_out),
+        .q(out_port_data_out)
+    );
     // Register Block
     registers u_regs (
         .clk(clk), .reset(reset), .bus_in(bus_out),
@@ -97,7 +115,7 @@ module datapath (
         .r8(r8), .r9(r9), .r10(r10), .r11(r11),
         .r12(r12), .r13(r13), .r14(r14), .r15(r15),
         .hi(hi), .lo(lo), .zhi(zhi), .zlo(zlo), .pc(pc), .mdr(mdr_q),
-        .in_port(in_port_value), .c_signext(c_sign_extended),
+        .in_port(in_port_q), .c_signext(c_sign_extended),
         .r_out(internal_r_out), // Driven by decoder
         .hi_out(hi_out), .lo_out(lo_out), .zhi_out(zhi_out), .zlo_out(zlo_out),
         .pc_out(pc_out), .mdr_out(mdr_out), .in_port_out(in_port_out), .c_out(c_out),
