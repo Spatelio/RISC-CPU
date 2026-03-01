@@ -49,7 +49,7 @@ module datapath (
         .BAout(ba_out), 
         .regIn(internal_r_in),  // Feeds u_regs.r_in
         .regOut(internal_r_out), // Feeds u_bus.r_out
-        .c_sign_extended(c_sign_extended) //feeds u_bus.cout?
+        .c_sign_extended(c_sign_extended) //feeds u_bus.c_sign_ext when c_out is high
     );
 
 
