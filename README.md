@@ -103,9 +103,9 @@ Shifts & Rotates
 
 - [x] BAout Logic: Gates 0s onto the bus if R0 is selected and BAout is active; otherwise puts R0 content. 
 
-- [ ] CON FF Logic:
+- [x] CON FF Logic:
 
-- [ ] Branch Logic: Decodes IR<22..19> (C2 field) and Bus data to determine if branch condition (Zero, NonZero, Positive, Negative) is met. 
+- [x] Branch Logic: Decodes IR<22..19> (C2 field) and Bus data to determine if branch condition (Zero, NonZero, Positive, Negative) is met. 
 
 - [ ] Input/Output Ports:
 

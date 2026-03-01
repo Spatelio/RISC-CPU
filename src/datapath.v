@@ -24,7 +24,11 @@ module datapath (
 
     // Outputs for simulation
     output wire [31:0] bus_out,
-    output wire [31:0] mdr_q
+    output wire [31:0] mdr_q,
+    //conff io
+    input  wire        con_in,
+    output wire        con_ff_out
+
 );
 
     // Internal wires for register selection
@@ -67,6 +71,15 @@ module datapath (
         .pc(pc), .ir(ir_val), .y(y), .mar(mar), .hi(hi), .lo(lo), .zhi(zhi), .zlo(zlo)
     );
 
+    conff u_conff (
+        .bus_in(bus_out),       // Checks value on the bus
+        .irIn(ir_val[20:19]),   // Checks C2 field (bits 19, 20)
+        .con_in(con_in),        // Control signal from Testbench
+        .clk(clk),
+        .reset(reset),
+        .q(con_ff_out)          // Output to Testbench/Control Unit
+    );
+
     // Memory Subsystem
     mdr u_mdr (
         .clk(clk), .reset(reset), .mdr_in(mdr_in), .read(read),
@@ -78,12 +91,8 @@ module datapath (
         .dataIn(mdr_q), .dataOut(ram_data_out), .addrIn(mar[8:0]) 
     );
 
-    // Bus with BAout Logic
-    // When BAout is high and R0 is selected, the bus receives 0 
-    wire [31:0] r0_gated = (ba_out && internal_r_out[0]) ? 32'b0 : r0;
-
     bus u_bus (
-        .r0(r0_gated), .r1(r1), .r2(r2), .r3(r3), // r0 replaced with gated version
+        .r0(r0), .r1(r1), .r2(r2), .r3(r3), //
         .r4(r4), .r5(r5), .r6(r6), .r7(r7),
         .r8(r8), .r9(r9), .r10(r10), .r11(r11),
         .r12(r12), .r13(r13), .r14(r14), .r15(r15),
