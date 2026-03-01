@@ -11,8 +11,9 @@ module datapath (
     input  wire        hi_in, lo_in, zhi_in, zlo_in,
     input  wire        pc_start,
     
-    // for alu
+    //for bus
     input  wire        zhi_out, zlo_out,
+    input  wire [4:0]  alu_opcode, // manually written right now since i types reuse
 
     // MDR and RAM Controls
     input  wire        mdr_in, mdr_out, read, write,
@@ -95,6 +96,6 @@ module datapath (
     );
 
     // ALU instance remains the same
-    alu u_alu (.A(y), .B(bus_out), .opcode(ir_val[31:27]), .C(alu_result));
+    alu u_alu (.A(y), .B(bus_out), .opcode(alu_opcode), .C(alu_result));
 
 endmodule

@@ -21,6 +21,7 @@ module tb_new_add;
     reg pc_start, mdr_in, mdr_out, read, write, pc_out, in_port_out, c_out;
     reg [31:0] in_port_value;
 
+    reg [4:0] alu_opcode;
     reg zlo_out, zhi_out;
 
     //  Outputs 
@@ -33,7 +34,7 @@ module tb_new_add;
         .gra(gra), .grb(grb), .grc(grc), .rin(rin), .rout(rout), .ba_out(ba_out),
         .pc_in(pc_in), .ir_in(ir_in), .y_in(y_in), .mar_in(mar_in),
         .hi_in(hi_in), .lo_in(lo_in), .zhi_in(zhi_in), .zlo_in(zlo_in),
-        .pc_start(pc_start),
+        .pc_start(pc_start), .alu_opcode(alu_opcode),
         .mdr_in(mdr_in), .mdr_out(mdr_out), .read(read), .write(write),
         .in_port_out(in_port_out), .c_out(c_out), .in_port_value(in_port_value),
         .bus_out(bus_out), .mdr_q(mdr_q),
@@ -68,6 +69,7 @@ module tb_new_add;
         {pc_in, ir_in, y_in, mar_in, hi_in, lo_in, zhi_in, zlo_in} = 0;
         {pc_start, mdr_in, mdr_out, read, write, pc_out, in_port_out, c_out} = 0;
         {zlo_out, zhi_out} = 0;
+        alu_opcode = 5'b00000;
         in_port_value = 0;
         reset = 0; // Default reset state
 
@@ -110,7 +112,9 @@ module tb_new_add;
             T5_Add: begin
                 grc = 1;         // Select R2
                 rout = 1;        // Output to Bus 
-                //these should get results without alu opcode being set now
+                //technically already 0
+                alu_opcode = 5'b00000;
+
                 zhi_in = 1;      // Latch High bits (if 64-bit result)
                 zlo_in = 1;      // Latch Low bits (Result)
             end

@@ -5,20 +5,21 @@ module alu(
     output reg [63:0] C           // 64-bit result (for multiplication and division)
 );
 
-    // Define operation codes
-    parameter ADD    = 5'b00000; 
-    parameter SUB    = 5'b00001; 
-    parameter MUL    = 5'b00010; 
-    parameter DIV    = 5'b00011; 
-    parameter AND    = 5'b00100; 
-    parameter OR     = 5'b00101; 
-    parameter SHR    = 5'b00110; 
-    parameter SHRA   = 5'b00111; 
-    parameter SHIFTL = 5'b01000; 
-    parameter ROTR   = 5'b01001; 
-    parameter ROTL   = 5'b01010; 
-    parameter NEG    = 5'b01011; 
-    parameter NOT    = 5'b01100; 
+    // Define operation codes (Matched to CPU Specification)
+    parameter ADD    = 5'b00000; // 
+    parameter SUB    = 5'b00001; // 
+    parameter AND    = 5'b00010; // 
+    parameter OR     = 5'b00011; // 
+    parameter SHR    = 5'b00100; // 
+    parameter SHRA   = 5'b00101; // 
+    parameter SHL    = 5'b00110; // 
+    parameter ROTR   = 5'b00111; // 
+    parameter ROTL   = 5'b01000; // 
+    
+    parameter DIV    = 5'b01100; // 
+    parameter MUL    = 5'b01101; // 
+    parameter NEG    = 5'b01110; // 
+    parameter NOT    = 5'b01111; // 
 
     // Wires for functional unit output
     wire [31:0] add_result;
@@ -93,34 +94,34 @@ module alu(
 
     shiftr shr_unit(
         .A(A),
-        .B(B),  
+        .B(B[4:0]),  
         .C(shr_result)
     );
 
 
     shiftra shra_unit(
         .A(A),
-        .B(B), 
+        .B(B[4:0]), 
         .C(shra_result)
     );
 
     shiftl shiftl_unit(
         .A(A),
-        .B(B),
+        .B(B[4:0]),
         .C(shiftl_result)
     );
 
 
     rotr rotr_unit(
         .A(A),
-        .B(B),
+        .B(B[4:0]),
         .C(rotr_result)
     );
 
 
     rotl rotl_unit(
         .A(A),
-        .B(B),
+        .B(B[4:0]),
         .C(rotl_result)
     );
 
@@ -135,7 +136,7 @@ module alu(
             OR:        C = {32'b0, or_result};
             SHR:       C = {32'b0, shr_result};
             SHRA:      C = {32'b0, shra_result};
-            SHIFTL:    C = {32'b0, shiftl_result};
+            SHL:       C = {32'b0, shiftl_result};
             ROTR:      C = {32'b0, rotr_result};
             ROTL:      C = {32'b0, rotl_result};
             NEG:       C = {32'b0, neg_result};
