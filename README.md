@@ -113,11 +113,11 @@ Shifts & Rotates
 
 - [x] Output Port: 32-bit register capturing data from Bus (BusMuxOut).
  #### Testbenches
- - [ ] ld (Load Direct): ld R7, 0x65 (Preload Mem[0x65]=0x84). Verify R7 gets 0x84. 
+ - [x] ld (Load Direct): ld R7, 0x65 (Preload Mem[0x65]=0x84). Verify R7 gets 0x84. 
 
-- [ ] ld (Load Indexed): ld R0, 0x72(R2) (Preload R2=0x57, Mem[0xC9]=0x2B). Verify R0 gets 0x2B. 
+- [x] ld (Load Indexed): ld R0, 0x72(R2) (Preload R2=0x57, Mem[0xC9]=0x2B). Verify R0 gets 0x2B. 
 
-- [ ] ldi (Load Immediate): ldi R7, 0x65. Verify R7 gets 0x65 (sign-extended). 
+- [x] ldi (Load Immediate): ldi R7, 0x65. Verify R7 gets 0x65 (sign-extended). 
 
 - [ ] st (Store Direct): st 0x1F, R6 (Preload R6=0x63). Verify Mem[0x1F] becomes 0x63. 
 
