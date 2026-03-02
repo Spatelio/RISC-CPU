@@ -9,6 +9,7 @@ module datapath (
     // Remaining Phase 1 register enables
     input  wire        pc_in, ir_in, y_in, mar_in, 
     input  wire        hi_in, lo_in, zhi_in, zlo_in,
+    input  wire        hi_out, lo_out,
     input  wire        pc_out,
     
     //for bus
@@ -86,7 +87,8 @@ module datapath (
         .ba_out(ba_out), //ba logic in registers now
         .r0(r0), .r1(r1), .r2(r2), .r3(r3), .r4(r4), .r5(r5), .r6(r6), .r7(r7),
         .r8(r8), .r9(r9), .r10(r10), .r11(r11), .r12(r12), .r13(r13), .r14(r14), .r15(r15),
-        .pc(pc), .ir(ir_val), .y(y), .mar(mar), .hi(hi), .lo(lo), .zhi(zhi), .zlo(zlo)
+        .pc(pc), .ir(ir_val), .y(y), .mar(mar), .hi(hi), .lo(lo), .zhi(zhi), .zlo(zlo),
+        .pc_in(pc_in)
     );
 
     conff u_conff (

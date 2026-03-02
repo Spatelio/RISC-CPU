@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-module tb_ld;
+module tb_ld_case1;
     parameter Default  = 4'b0000,
               T_RESET  = 4'b1111,
               T0       = 4'b0001, T1 = 4'b0010, T2 = 4'b0011, T3 = 4'b0100,
@@ -30,6 +30,7 @@ module tb_ld;
         .pc_in(pc_in), .ir_in(ir_in), .y_in(y_in), .mar_in(mar_in),
         .hi_in(hi_in), .lo_in(lo_in), .zhi_in(zhi_in), .zlo_in(zlo_in),
         .alu_opcode(alu_opcode),
+        .pc_out(pc_out),
         .mdr_in(mdr_in), .mdr_out(mdr_out), .read(read), .write(write),
         .in_port_out(in_port_out), .c_out(c_out),
         .zhi_out(zhi_out), .zlo_out(zlo_out),
@@ -44,7 +45,7 @@ module tb_ld;
     initial begin clk = 0; forever #10 clk = ~clk; end
 
     initial begin
-        uut.u_ram.memData[9'h000] = {5'b00001, 4'd7, 4'd0, 19'h065};
+        uut.u_ram.memData[9'h000] = {5'b10001, 4'd7, 4'd0, 19'h065};
         uut.u_ram.memData[9'h065] = 32'h00000084;
         uut.u_ram.memData[9'h0C9] = 32'h0000002B; // Case 2: ld R0, 0x72(R2)
     end
@@ -141,8 +142,8 @@ module tb_ld;
     end
 
     initial begin
-        $dumpfile("waves/p2/ld.vcd");
-        $dumpvars(0, tb_ld);
+        $dumpfile("waves/p2/ld_case1.vcd");
+        $dumpvars(0, tb_ld_case1);
     end
 
 endmodule

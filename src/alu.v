@@ -22,6 +22,10 @@ module alu(
     parameter NOT    = 5'b01111; // 
     parameter INC    = 5'b10000;
 
+    //non alu used outputs putting them here so we know theyre taken
+    parameter LD     = 5'b10001;
+    parameter LDI    = 5'b10010;
+
     // Wires for functional unit output
     wire [31:0] add_result;
     wire [31:0] sub_result;
