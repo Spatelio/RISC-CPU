@@ -125,11 +125,11 @@ Shifts & Rotates
 
 ALU Immediate Instructions
 
-- [ ] addi: addi R7, R4, -9. Verify R7 = R4 + (-9). 
+- [x] addi: addi R7, R4, -9. Verify R7 = R4 + (-9). 
 
-- [ ] andi: andi R7, R4, 0x71. Verify R7 = R4 & 0x71. 
+- [x] andi: andi R7, R4, 0x71. Verify R7 = R4 & 0x71. 
 
-- [ ] ori: ori R7, R4, 0x71. Verify R7 = R4 | 0x71. 
+- [x] ori: ori R7, R4, 0x71. Verify R7 = R4 | 0x71. 
 
 Branch Instructions (CON FF Tests)
 
