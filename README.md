@@ -119,9 +119,9 @@ Shifts & Rotates
 
 - [x] ldi (Load Immediate): ldi R7, 0x65. Verify R7 gets 0x65 (sign-extended). 
 
-- [ ] st (Store Direct): st 0x1F, R6 (Preload R6=0x63). Verify Mem[0x1F] becomes 0x63. 
+- [x] st (Store Direct): st 0x1F, R6 (Preload R6=0x63). Verify Mem[0x1F] becomes 0x63. 
 
-- [ ] st (Store Indexed): st 0x1F(R6), R6 (Preload R6=0x63). Verify Mem[0x82] becomes 0x63. 
+- [x] st (Store Indexed): st 0x1F(R6), R6 (Preload R6=0x63). Verify Mem[0x82] becomes 0x63. 
 
 ALU Immediate Instructions
 
