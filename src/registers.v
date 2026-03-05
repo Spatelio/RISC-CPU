@@ -104,9 +104,11 @@ module registers (
     reg32 u_mar (.clk(clk), .reset(reset), .wr_en(mar_in), .d(bus_in), .q(mar));
     reg32 u_hi  (.clk(clk), .reset(reset), .wr_en(hi_in),  .d(bus_in), .q(hi));
     reg32 u_lo  (.clk(clk), .reset(reset), .wr_en(lo_in),  .d(bus_in), .q(lo));
+    reg32 u_pc  (.clk(clk), .reset(reset), .wr_en(pc_in), .d(bus_in),  .q(pc));
 
     // Z register split (ZHI/ZLO)
     reg32 u_zhi (.clk(clk), .reset(reset), .wr_en(zhi_in), .d(alu_in[63:32]), .q(zhi));
     reg32 u_zlo (.clk(clk), .reset(reset), .wr_en(zlo_in), .d(alu_in[31:0]),  .q(zlo));
+   
 
 endmodule

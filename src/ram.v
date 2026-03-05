@@ -9,7 +9,7 @@ module ram (
 
 reg[31:0] memData[511:0];
 
-always @(posedge clk) begin
+always @(posedge clk, read, write) begin
     if(write) begin
         memData[addrIn] <= dataIn;
     end
