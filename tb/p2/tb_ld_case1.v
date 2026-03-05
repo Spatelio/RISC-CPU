@@ -5,8 +5,7 @@ module tb_ld_case1;
               T_RESET  = 4'b1111,
               T0       = 4'b0001, T1 = 4'b0010, T2 = 4'b0011, T3 = 4'b0100,
               T4       = 4'b0101, T5 = 4'b0110, T6 = 4'b0111,
-              T7       = 4'b1000, T8 = 4'b1001, T9 = 4'b1010,
-              Stop     = 4'b1011;
+              T7       = 4'b1000, Stop = 4'b1011;
 
     reg [3:0] Present_state = Default;
 
@@ -47,7 +46,7 @@ module tb_ld_case1;
     initial begin
         uut.u_ram.memData[9'h000] = {5'b10001, 4'd7, 4'd0, 19'h065};
         uut.u_ram.memData[9'h065] = 32'h00000084;
-        uut.u_ram.memData[9'h0C9] = 32'h0000002B; // Case 2: ld R0, 0x72(R2)
+        uut.u_ram.memData[9'h0C9] = 32'h0000002B; // Case 1: ld R7, 0x65
     end
 
     always @(posedge clk) begin
@@ -61,9 +60,7 @@ module tb_ld_case1;
             T4:       Present_state <= T5;
             T5:       Present_state <= T6;
             T6:       Present_state <= T7;
-            T7:       Present_state <= T8;
-            T8:       Present_state <= T9;
-            T9:       Present_state <= Stop;
+            T7:       Present_state <= Stop;
             Stop:     $finish;
         endcase
     end
@@ -82,61 +79,53 @@ module tb_ld_case1;
             Default:  reset = 1;
             T_RESET:  reset = 1;
 
-            // T0: PC -> MAR, INC PC -> Zlo
+            // PCout, MARin, IncPC, Zin
             T0: begin
                 pc_out     = 1;
                 mar_in     = 1;
                 alu_opcode = 5'b10000; // INC
                 zlo_in     = 1;
             end
-            // T1: Zlo (PC+1) -> PC, assert Read
+            // Zlowout, PCin, Read, Mdatain[31..0], MDRin
             T1: begin
                 zlo_out = 1;
                 pc_in   = 1;
                 read    = 1;
+                mdr_in  = 1;
             end
-            // T2: Keep read=1 so MDR mux still selects mdatain (now valid)
+            // MDRout, IRin
             T2: begin
-                read   = 1;
-                mdr_in = 1;
-            end
-            // T3: MDR -> IR
-            T3: begin
                 mdr_out = 1;
-                ir_in   = 1;
+                ir_in = 1;
             end
-
-            // T4: Rb (or 0 via BAout) -> Y
-            T4: begin
+            // Grb, BAout, Yin
+            T3: begin
                 grb    = 1;
                 ba_out = 1;
                 y_in   = 1;
             end
-            // T5: Y + C_sign_extended -> Zlo  (effective address)
-            T5: begin
+
+            // Cout, ADD, Zin
+            T4: begin
                 c_out      = 1;
                 alu_opcode = 5'b00000; // ADD
                 zlo_in     = 1;
             end
-            // T6: Zlo -> MAR
-            T6: begin
+            // Zlowout, MARin
+            T5: begin
                 zlo_out = 1;
                 mar_in  = 1;
             end
-            // T7: Assert Read — sync RAM clocks, dataOut valid after this posedge
-            T7: begin
+            // Read, Mdatain[31..0], MDRin
+            T6: begin
                 read = 1;
-            end
-            // T8: Keep read=1, latch into MDR
-            T8: begin
-                read   = 1;
                 mdr_in = 1;
             end
-            // T9: MDR -> Ra
-            T9: begin
+            // MDRout, Gra, Rin
+            T7: begin
                 mdr_out = 1;
-                gra     = 1;
-                rin     = 1;
+                gra = 1;
+                rin = 1;
             end
         endcase
     end

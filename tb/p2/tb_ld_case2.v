@@ -57,7 +57,7 @@ module tb_ld_case2;
         // Instruction 1: ld R0, 0x72(R2)  (opcode=10001, Ra=0, Rb=2, C=0x72)
         uut.u_ram.memData[9'h001] = {5'b10001, 4'd0, 4'd2, 19'h072};
         // Data
-        uut.u_ram.memData[9'h0C9] = 32'h0000002B;
+        uut.u_ram.memData[9'h0C9] = 32'h0000002B; //value stored at r2+0x72
     end
 
     always @(posedge clk) begin
@@ -69,8 +69,7 @@ module tb_ld_case2;
             T2:       Present_state <= T3;
             T3:       Present_state <= T4;
             T4:       Present_state <= T5;
-            T5:       Present_state <= T6;
-            T6:       Present_state <= A0;  // ldi done
+            T5:       Present_state <= A0;  // ldi done
             A0:       Present_state <= A1;
             A1:       Present_state <= A2;
             A2:       Present_state <= A3;
@@ -78,9 +77,7 @@ module tb_ld_case2;
             A4:       Present_state <= A5;
             A5:       Present_state <= A6;
             A6:       Present_state <= A7;
-            A7:       Present_state <= A8;
-            A8:       Present_state <= A9;
-            A9:       Present_state <= Stop;
+            A7:       Present_state <= Stop;
             Stop:     $finish;
         endcase
     end
@@ -100,86 +97,88 @@ module tb_ld_case2;
             Default:  reset = 1;
             T_RESET:  reset = 1;
 
+            // PCout, MARin, IncPC, Zin
             T0: begin
                 pc_out     = 1;
                 mar_in     = 1;
                 alu_opcode = 5'b10000; // INC
                 zlo_in     = 1;
             end
+            // Zlowout, PCin, Read, Mdatain[31..0], MDRin
             T1: begin
                 zlo_out = 1;
                 pc_in   = 1;
                 read    = 1;
+                mdr_in  = 1;
             end
+            // MDRout, IRin
             T2: begin
-                read   = 1;
-                mdr_in = 1;
-            end
-            T3: begin
                 mdr_out = 1;
-                ir_in   = 1;
+                ir_in = 1;
             end
-            T4: begin
-                grb    = 1;
+            T3: begin //Grb, BAout, Yin
+                grb = 1;
                 ba_out = 1;
-                y_in   = 1;
+                y_in = 1;
             end
-            T5: begin
-                c_out      = 1;
-                alu_opcode = 5'b00000; // ADD
-                zlo_in     = 1;
+            T4: begin //Cout, ADD, Zin
+                c_out = 1;
+                alu_opcode = 5'b00000;
+                zlo_in = 1;
             end
-            // ldi: result goes straight to Ra (R2)
-            T6: begin
+            T5: begin //Zlowout, Gra, Rin
                 zlo_out = 1;
-                gra     = 1;
-                rin     = 1;
-            end
-
+                gra = 1;
+                rin = 1;
+            end //end of ldi to get the right value in r2
+            
+            // PCout, MARin, IncPC, Zin
             A0: begin
                 pc_out     = 1;
                 mar_in     = 1;
                 alu_opcode = 5'b10000; // INC
                 zlo_in     = 1;
             end
+            // Zlowout, PCin, Read, Mdatain[31..0], MDRin
             A1: begin
                 zlo_out = 1;
                 pc_in   = 1;
                 read    = 1;
+                mdr_in  = 1;
             end
+            // MDRout, IRin
             A2: begin
-                read   = 1;
-                mdr_in = 1;
-            end
-            A3: begin
                 mdr_out = 1;
-                ir_in   = 1;
+                ir_in = 1;
             end
-            A4: begin
+            // Grb, BAout, Yin
+            A3: begin
                 grb    = 1;
                 ba_out = 1;
                 y_in   = 1;
             end
-            A5: begin
+
+            // Cout, ADD, Zin
+            A4: begin
                 c_out      = 1;
                 alu_opcode = 5'b00000; // ADD
                 zlo_in     = 1;
             end
-            A6: begin
+            // Zlowout, MARin
+            A5: begin
                 zlo_out = 1;
                 mar_in  = 1;
             end
-            A7: begin
+            // Read, Mdatain[31..0], MDRin
+            A6: begin
                 read = 1;
-            end
-            A8: begin
-                read   = 1;
                 mdr_in = 1;
             end
-            A9: begin
+            // MDRout, Gra, Rin
+            A7: begin
                 mdr_out = 1;
-                gra     = 1;
-                rin     = 1;
+                gra = 1;
+                rin = 1;
             end
         endcase
     end

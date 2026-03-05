@@ -48,7 +48,7 @@ module tb_ld_case3;
     initial begin clk = 0; forever #10 clk = ~clk; end
 
     initial begin
-        // Instruction 1: ldi R2, 0x65  (opcode=10010, Ra=2, Rb=0, C=0x65)
+        // Instruction 1: ldi R7, 0x65  (opcode=10010, Ra=2, Rb=0, C=0x65)
         uut.u_ram.memData[9'h000] = {5'b10010, 4'd7, 4'd0, 19'h065};
         uut.u_ram.memData[9'h065] = 32'h0000002B;
     end
@@ -62,8 +62,7 @@ module tb_ld_case3;
             T2:       Present_state <= T3;
             T3:       Present_state <= T4;
             T4:       Present_state <= T5;
-            T5:       Present_state <= T6;
-            T6:       Present_state <= Stop;  // ldi done
+            T5:       Present_state <= Stop;  // ldi done
             Stop:     $finish;
         endcase
     end
@@ -83,41 +82,41 @@ module tb_ld_case3;
             Default:  reset = 1;
             T_RESET:  reset = 1;
 
+            // PCout, MARin, IncPC, Zin
             T0: begin
                 pc_out     = 1;
                 mar_in     = 1;
                 alu_opcode = 5'b10000; // INC
                 zlo_in     = 1;
             end
+            // Zlowout, PCin, Read, Mdatain[31..0], MDRin
             T1: begin
                 zlo_out = 1;
                 pc_in   = 1;
                 read    = 1;
+                mdr_in  = 1;
             end
+            // MDRout, IRin
             T2: begin
-                read   = 1;
-                mdr_in = 1;
-            end
-            T3: begin
                 mdr_out = 1;
-                ir_in   = 1;
+                ir_in = 1;
             end
-            T4: begin
-                grb    = 1;
+            T3: begin //Grb, BAout, Yin
+                grb = 1;
                 ba_out = 1;
-                y_in   = 1;
+                y_in = 1;
             end
-            T5: begin
-                c_out      = 1;
-                alu_opcode = 5'b00000; // ADD
-                zlo_in     = 1;
+            T4: begin //Cout, ADD, Zin
+                c_out = 1;
+                alu_opcode = 5'b00000;
+                zlo_in = 1;
+            end
+            T5: begin //Zlowout, Gra, Rin
+                zlo_out = 1;
+                gra = 1;
+                rin = 1;
             end
             // ldi: result goes straight to Ra (R7)
-            T6: begin
-                zlo_out = 1;
-                gra     = 1;
-                rin     = 1;
-            end
         endcase
     end
 
