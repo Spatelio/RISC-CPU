@@ -147,9 +147,9 @@ Jump & Special Instructions
 
 - [x] jal: jal R4. Verify PC takes R4, and R12 (RA) gets PC+1. 
 
-- [ ] mfhi: mfhi R5. Verify R5 gets HI. 
+- [x] mfhi: mfhi R5. Verify R5 gets HI. 
 
-- [ ] mflo: mflo R1. Verify R1 gets LO. 
+- [x] mflo: mflo R1. Verify R1 gets LO. 
 
 Input/Output Instructions
 
