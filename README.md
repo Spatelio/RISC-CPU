@@ -153,6 +153,6 @@ Jump & Special Instructions
 
 Input/Output Instructions
 
-- [ ] out: out R7. Verify Output Port gets R7 value. 
+- [x] out: out R7. Verify Output Port gets R7 value. 
 
-- [ ] in: in R5. Verify R5 gets Input Port value.
+- [x] in: in R5. Verify R5 gets Input Port value.
