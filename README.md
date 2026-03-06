@@ -143,9 +143,9 @@ Branch Instructions (CON FF Tests)
 
 Jump & Special Instructions
 
-- [ ] jr: jr R12. Verify PC takes value from R12. 
+- [x] jr: jr R12. Verify PC takes value from R12. 
 
-- [ ] jal: jal R4. Verify PC takes R4, and R12 (RA) gets PC+1. 
+- [x] jal: jal R4. Verify PC takes R4, and R12 (RA) gets PC+1. 
 
 - [ ] mfhi: mfhi R5. Verify R5 gets HI. 
 
