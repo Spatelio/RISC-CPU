@@ -22,6 +22,8 @@ Should create a bin folder for testbench results as well as a waves folder for t
 
 The script compiles everything in the ```/src``` folder and creates a wave for every testbench in the ```/tb``` folder.
 
+I use the vaporview extension on vscode to view the waveforms instead of modelsim.
+
 ### Compatibility
 Since on Mac I am only inspecting the final waveforms created by iverilog, my testbench format uses 
 ```verilog
