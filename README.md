@@ -133,7 +133,7 @@ ALU Immediate Instructions
 
 Branch Instructions (CON FF Tests)
 
-- [ ] brzr: brzr R3, 48. Test taken/not taken cases. 
+- [x] brzr: brzr R3, 48. Test taken/not taken cases. 
 
 - [ ] brnz: brnz R3, 48. Test taken/not taken cases. 
 
