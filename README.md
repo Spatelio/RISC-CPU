@@ -135,11 +135,11 @@ Branch Instructions (CON FF Tests)
 
 - [x] brzr: brzr R3, 48. Test taken/not taken cases. 
 
-- [ ] brnz: brnz R3, 48. Test taken/not taken cases. 
+- [x] brnz: brnz R3, 48. Test taken/not taken cases. 
 
-- [ ] brpl: brpl R3, 48. Test taken/not taken cases. 
+- [x] brpl: brpl R3, 48. Test taken/not taken cases. 
 
-- [ ] brmi: brmi R3, 48. Test taken/not taken cases. 
+- [x] brmi: brmi R3, 48. Test taken/not taken cases. 
 
 Jump & Special Instructions
 
