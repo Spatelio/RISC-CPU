@@ -6,7 +6,7 @@ module tb_ld_case3;
               T_RESET = 5'd31,
               // Instruction 0: ldi R2, 0x57
               T0  = 5'd1,  T1  = 5'd2,  T2  = 5'd3,  T3  = 5'd4,
-              T4  = 5'd5,  T5  = 5'd6,  T6  = 5'd7,
+              T4  = 5'd5,  T5  = 5'd6,
               Stop = 5'd18;
 
     reg [4:0] Present_state = Default;

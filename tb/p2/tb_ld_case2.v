@@ -6,11 +6,8 @@ module tb_ld_case2;
               T_RESET = 5'd31,
               // Instruction 0: ldi R2, 0x57
               T0  = 5'd1,  T1  = 5'd2,  T2  = 5'd3,  T3  = 5'd4,
-              T4  = 5'd5,  T5  = 5'd6,  T6  = 5'd7,
-              // Instruction 1: ld R0, 0x72(R2)
-              A0  = 5'd8,  A1  = 5'd9,  A2  = 5'd10, A3  = 5'd11,
-              A4  = 5'd12, A5  = 5'd13, A6  = 5'd14,
-              A7  = 5'd15, A8  = 5'd16, A9  = 5'd17,
+              T4  = 5'd5,  T5  = 5'd6,  T6  = 5'd7, T7 = 5'd8,
+            
               Stop = 5'd18;
 
     reg [4:0] Present_state = Default;
@@ -52,11 +49,8 @@ module tb_ld_case2;
     initial begin clk = 0; forever #10 clk = ~clk; end
 
     initial begin
-        // Instruction 0: ldi R2, 0x57  (opcode=10010, Ra=2, Rb=0, C=0x57)
-        uut.u_ram.memData[9'h000] = {5'b10010, 4'd2, 4'd0, 19'h057};
-        // Instruction 1: ld R0, 0x72(R2)  (opcode=10001, Ra=0, Rb=2, C=0x72)
-        uut.u_ram.memData[9'h001] = {5'b10001, 4'd0, 4'd2, 19'h072};
-        // Data
+        // Instruction 0: ld R0, 0x72(R2) (opcode=10010, Ra=0, Rb=2, C=0x72)
+        uut.u_ram.memData[9'h000] = {5'b10010, 4'd0, 4'd2, 19'h072};
         uut.u_ram.memData[9'h0C9] = 32'h0000002B; //value stored at r2+0x72
     end
 
@@ -69,15 +63,9 @@ module tb_ld_case2;
             T2:       Present_state <= T3;
             T3:       Present_state <= T4;
             T4:       Present_state <= T5;
-            T5:       Present_state <= A0;  // ldi done
-            A0:       Present_state <= A1;
-            A1:       Present_state <= A2;
-            A2:       Present_state <= A3;
-            A3:       Present_state <= A4;
-            A4:       Present_state <= A5;
-            A5:       Present_state <= A6;
-            A6:       Present_state <= A7;
-            A7:       Present_state <= Stop;
+            T5:       Present_state <= T6; 
+            T6:       Present_state <= T7;
+            T7:       Present_state <= Stop;
             Stop:     $finish;
         endcase
     end
@@ -103,6 +91,7 @@ module tb_ld_case2;
                 mar_in     = 1;
                 alu_opcode = 5'b10000; // INC
                 zlo_in     = 1;
+                force uut.u_regs.GEN_REGS[2].u_reg.q = 32'h00000057;
             end
             // Zlowout, PCin, Read, Mdatain[31..0], MDRin
             T1: begin
@@ -116,66 +105,31 @@ module tb_ld_case2;
                 mdr_out = 1;
                 ir_in = 1;
             end
-            T3: begin //Grb, BAout, Yin
-                grb = 1;
-                ba_out = 1;
-                y_in = 1;
-            end
-            T4: begin //Cout, ADD, Zin
-                c_out = 1;
-                alu_opcode = 5'b00000;
-                zlo_in = 1;
-            end
-            T5: begin //Zlowout, Gra, Rin
-                zlo_out = 1;
-                gra = 1;
-                rin = 1;
-            end //end of ldi to get the right value in r2
-            
-            // PCout, MARin, IncPC, Zin
-            A0: begin
-                pc_out     = 1;
-                mar_in     = 1;
-                alu_opcode = 5'b10000; // INC
-                zlo_in     = 1;
-            end
-            // Zlowout, PCin, Read, Mdatain[31..0], MDRin
-            A1: begin
-                zlo_out = 1;
-                pc_in   = 1;
-                read    = 1;
-                mdr_in  = 1;
-            end
-            // MDRout, IRin
-            A2: begin
-                mdr_out = 1;
-                ir_in = 1;
-            end
             // Grb, BAout, Yin
-            A3: begin
+            T3: begin
                 grb    = 1;
                 ba_out = 1;
                 y_in   = 1;
             end
 
             // Cout, ADD, Zin
-            A4: begin
+            T4: begin
                 c_out      = 1;
                 alu_opcode = 5'b00000; // ADD
                 zlo_in     = 1;
             end
             // Zlowout, MARin
-            A5: begin
+            T5: begin
                 zlo_out = 1;
                 mar_in  = 1;
             end
             // Read, Mdatain[31..0], MDRin
-            A6: begin
+            T6: begin
                 read = 1;
                 mdr_in = 1;
             end
             // MDRout, Gra, Rin
-            A7: begin
+            T7: begin
                 mdr_out = 1;
                 gra = 1;
                 rin = 1;
