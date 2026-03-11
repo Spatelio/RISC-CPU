@@ -45,11 +45,6 @@ module tb_mfhi;
 
     initial begin clk = 0; forever #10 clk = ~clk; end
 
-    initial begin
-        uut.u_ram.memData[9'h000] = {5'b01101, 4'd7, 4'd4, 19'h000}; // mul r7 r4
-        uut.u_ram.memData[9'h001] = {5'b10001, 4'd5, 4'd0, 19'h000}; //mfhi r5
-    end
-
     always @(posedge clk) begin
         case (Present_state)
             Default:  Present_state <= T_RESET;

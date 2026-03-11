@@ -42,10 +42,6 @@ module tb_jal;
 
     initial begin clk = 0; forever #10 clk = ~clk; end
 
-    initial begin
-        uut.u_ram.memData[9'h00F] = {5'b10001, 4'd4, 4'd12, 19'h000}; // jr r12 pc has to start at FF
-    end
-
     always @(posedge clk) begin
         case (Present_state)
             Default:  Present_state <= T_RESET;

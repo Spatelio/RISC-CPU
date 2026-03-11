@@ -48,13 +48,6 @@ module tb_brnz;
 
     initial begin clk = 0; forever #10 clk = ~clk; end
 
-    initial begin
-        // Instruction 0: brnz  (opcode=10010, Ra=3, 48) and set normal rb spot to 1
-        uut.u_ram.memData[9'h000] = {5'b10010, 4'd3, 4'd1, 19'h048};
-        //we'll do taken first, pc should get 49 after
-        //d3 gets 0
-    end
-
     always @(posedge clk) begin
         case (Present_state)
             Default:  Present_state <= T_RESET;
