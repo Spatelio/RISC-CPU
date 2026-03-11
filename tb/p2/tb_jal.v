@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-module tb_jar;
+module tb_jal;
     parameter Default  = 4'b0000,
               T_RESET  = 4'b1111,
               T0       = 4'b0001, T1 = 4'b0010, T2 = 4'b0011, T3 = 4'b0100, T4 = 4'b0101,
@@ -112,8 +112,8 @@ module tb_jar;
     end
 
     initial begin
-        $dumpfile("waves/p2/jar.vcd");
-        $dumpvars(0, tb_jar);
+        $dumpfile("waves/p2/jal.vcd");
+        $dumpvars(0, tb_jal);
     end
 
 endmodule

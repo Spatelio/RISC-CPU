@@ -47,12 +47,6 @@ module tb_ld_case3;
 
     initial begin clk = 0; forever #10 clk = ~clk; end
 
-    initial begin
-        // Instruction 1: ldi R7, 0x65  (opcode=10010, Ra=2, Rb=0, C=0x65)
-        uut.u_ram.memData[9'h000] = {5'b10010, 4'd7, 4'd0, 19'h065};
-        uut.u_ram.memData[9'h065] = 32'h0000002B;
-    end
-
     always @(posedge clk) begin
         case (Present_state)
             Default:  Present_state <= T_RESET;

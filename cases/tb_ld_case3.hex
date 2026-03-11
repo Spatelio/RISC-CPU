@@ -1,0 +1,10 @@
+// Testcase for tb_ld_case3
+// Mirrors original tb initialization of uut.u_ram.memData:
+// - mem[0x000] = {5'b10010, 4'd7, 4'd0, 19'h065} = 0x93800065
+// - mem[0x065] = 0x0000002B
+
+@0000
+93800065
+@0065
+0000002B
+

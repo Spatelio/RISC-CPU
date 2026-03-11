@@ -43,10 +43,6 @@ module tb_addi;
 
     initial begin clk = 0; forever #10 clk = ~clk; end
 
-    initial begin
-        uut.u_ram.memData[9'h000] = {5'b10001, 4'd7, 4'd4, -19'd9}; // Addi r7 r4 -9
-    end
-
     always @(posedge clk) begin
         case (Present_state)
             Default:  Present_state <= T_RESET;

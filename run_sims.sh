@@ -5,13 +5,15 @@ SRC_DIR="src"
 TB_DIR="tb/p2"
 BIN_DIR="bin"
 WAVE_DIR="waves/p2"
+CASE_DIR="cases"
 
 # Create directories if they don't exist
-mkdir -p $BIN_DIR
-mkdir -p $WAVE_DIR
+mkdir -p "$BIN_DIR"
+mkdir -p "$WAVE_DIR"
+mkdir -p "$CASE_DIR"
 
 # Loop through all testbench files
-for tb_file in $TB_DIR/*.v; do
+for tb_file in "$TB_DIR"/*.v; do
     tb_name=$(basename "$tb_file" .v)
     
     echo "--------------------------------------------------"
@@ -21,6 +23,16 @@ for tb_file in $TB_DIR/*.v; do
     iverilog -g2012 -I "$SRC_DIR" -o "$BIN_DIR/$tb_name.vvp" "$SRC_DIR"/*.v "$tb_file"
     
     if [ $? -eq 0 ]; then
+        case_file="$CASE_DIR/$tb_name.hex"
+
+        if [ -f "$case_file" ]; then
+            echo "Using testcase: $case_file"
+            cp "$case_file" currentcase.hex
+        else
+            echo "Warning: no testcase hex found for $tb_name (expected $case_file)."
+            echo "         RAM will use whatever is currently in currentcase.hex."
+        fi
+
         echo "Running simulation: $tb_name"
         # Run simulation
         vvp "$BIN_DIR/$tb_name.vvp"

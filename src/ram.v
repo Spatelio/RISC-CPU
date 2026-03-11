@@ -7,7 +7,11 @@ module ram (
     output reg[31:0] dataOut //we'll do sync ram
 );
 
-reg[31:0] memData[511:0];
+reg[31:0] memData[0:511];
+
+initial begin
+    $readmemh("currentcase.hex", memData);
+end
 
 always @(posedge clk) begin
     if(write) begin
