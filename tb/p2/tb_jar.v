@@ -43,7 +43,7 @@ module tb_jar;
     initial begin clk = 0; forever #10 clk = ~clk; end
 
     initial begin
-        uut.u_ram.memData[9'h00F] = {5'b10001, 4'd4, 4'd12, 19'h000}; // jr r12 pc has to start at FF
+        uut.u_ram.memData[9'h00F] = {5'b10011, 4'd4, 4'd12}; // jr r12 pc has to start at FF
     end
 
     always @(posedge clk) begin
@@ -109,11 +109,6 @@ module tb_jar;
                 pc_in   = 1;
             end
         endcase
-    end
-
-    initial begin
-        $dumpfile("waves/p2/jar.vcd");
-        $dumpvars(0, tb_jar);
     end
 
 endmodule

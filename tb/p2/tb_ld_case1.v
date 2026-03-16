@@ -45,8 +45,7 @@ module tb_ld_case1;
 
     initial begin
         uut.u_ram.memData[9'h000] = {5'b10001, 4'd7, 4'd0, 19'h065};
-        uut.u_ram.memData[9'h065] = 32'h00000084;
-        uut.u_ram.memData[9'h0C9] = 32'h0000002B; // Case 1: ld R7, 0x65
+        uut.u_ram.memData[9'h065] = 32'h00000084; // Case 1: ld R7, 0x65
     end
 
     always @(posedge clk) begin
@@ -61,7 +60,7 @@ module tb_ld_case1;
             T5:       Present_state <= T6;
             T6:       Present_state <= T7;
             T7:       Present_state <= Stop;
-            Stop:     $finish;
+            Stop:     $stop;
         endcase
     end
 
@@ -128,11 +127,6 @@ module tb_ld_case1;
                 rin = 1;
             end
         endcase
-    end
-
-    initial begin
-        $dumpfile("waves/p2/ld_case1.vcd");
-        $dumpvars(0, tb_ld_case1);
     end
 
 endmodule

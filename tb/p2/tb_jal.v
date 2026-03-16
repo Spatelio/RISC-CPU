@@ -1,12 +1,13 @@
 `timescale 1ns/10ps
 
-module tb_mfhi;
+module tb_jal;
     parameter Default  = 4'b0000,
               T_RESET  = 4'b1111,
               T0       = 4'b0001,
               T1       = 4'b0010,
               T2       = 4'b0011,
               T3       = 4'b0100,
+              T4       = 4'b0101,
               Stop     = 4'b1011;
 
     reg [3:0] Present_state = Default;
@@ -19,8 +20,6 @@ module tb_mfhi;
     reg [31:0] in_port_data_in;
     reg [4:0]  alu_opcode;
     reg zlo_out, zhi_out;
-
-    reg hi_out, lo_out;
 
     wire [31:0] bus_out;
     wire [31:0] mdr_q;
@@ -37,8 +36,6 @@ module tb_mfhi;
         .mdr_in(mdr_in), .mdr_out(mdr_out), .read(read), .write(write),
         .in_port_out(in_port_out), .c_out(c_out),
         .zhi_out(zhi_out), .zlo_out(zlo_out),
-        .hi_out(hi_out),
-        .lo_out(lo_out),
         .in_port_data_in(in_port_data_in),
         .out_port_in(out_port_in),
         .out_port_data_out(out_port_data_out),
@@ -53,9 +50,10 @@ module tb_mfhi;
     end
 
     initial begin
-        // mfhi R5 : opcode = 11000, Ra = 5
-        // PC is preloaded to 0x10 to place instr there
-        uut.u_ram.memData[9'h010] = {5'b11000, 4'd5, 23'd0};
+        // jal R4
+        // opcode = 10011, Ra = 4
+        // Rb = 12 is used here only so grb+rin can target R12 in this TB
+        uut.u_ram.memData[9'h010] = {5'b10011, 4'd4, 4'd12, 19'd0};
     end
 
     always @(posedge clk) begin
@@ -65,7 +63,8 @@ module tb_mfhi;
             T0:      Present_state <= T1;
             T1:      Present_state <= T2;
             T2:      Present_state <= T3;
-            T3:      Present_state <= Stop;
+            T3:      Present_state <= T4;
+            T4:      Present_state <= Stop;
             Stop:    $stop;
         endcase
     end
@@ -77,7 +76,6 @@ module tb_mfhi;
         {mdr_in, mdr_out, read, write, pc_out, c_out}  = 6'b0;
         {in_port_out, out_port_in, con_in}             = 3'b0;
         {zlo_out, zhi_out}                              = 2'b0;
-        {hi_out, lo_out}                                = 2'b0;
         alu_opcode = 5'b00000;
         reset = 0;
         in_port_data_in = 32'h00000000;
@@ -98,14 +96,14 @@ module tb_mfhi;
                 alu_opcode = 5'b10000; // INC
                 zlo_in     = 1;
 
-                // preload registers
-                force uut.u_regs.u_pc.q              = 32'h00000010;
-                force uut.u_regs.u_hi.q              = 32'h89ABCDEF;
-                force uut.u_regs.GEN_REGS[5].u_reg.q = 32'h00000000;
+                // preload for jal R4 demo
+                force uut.u_regs.GEN_REGS[4].u_reg.q  = 32'h000000FF; // jump target
+                force uut.u_regs.GEN_REGS[12].u_reg.q = 32'h00000000; // old RA
+                force uut.u_regs.u_pc.q               = 32'h00000010; // starting PC
                 #1;
+                release uut.u_regs.GEN_REGS[4].u_reg.q;
+                release uut.u_regs.GEN_REGS[12].u_reg.q;
                 release uut.u_regs.u_pc.q;
-                release uut.u_regs.u_hi.q;
-                release uut.u_regs.GEN_REGS[5].u_reg.q;
             end
 
             // T1: Zlowout, PCin, Read, MDRin
@@ -122,11 +120,19 @@ module tb_mfhi;
                 ir_in   = 1;
             end
 
-            // T3: HIout, Gra, Rin
+            // T3: save return address into R12
+            // using grb cause this TB places 12 in the Rb field
             T3: begin
-                hi_out = 1;
-                gra    = 1;
+                pc_out = 1;
                 rin    = 1;
+                grb    = 1;
+            end
+
+            // T4: Gra, Rout, PCin  => PC <- R4
+            T4: begin
+                gra   = 1;
+                rout  = 1;
+                pc_in = 1;
             end
         endcase
     end
