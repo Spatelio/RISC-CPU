@@ -48,12 +48,6 @@ module tb_brpl;
 
     initial begin clk = 0; forever #10 clk = ~clk; end
 
-    initial begin
-        // Instruction 0: brpl  (opcode=10010, Ra=3, 48) and set normal rb spot to 2
-        uut.u_ram.memData[9'h000] = {5'b10010, 4'd3, 4'd2, 19'h048};
-        //we'll do taken first, pc should get 49 after
-        //d3 gets 0
-    end
 
     always @(posedge clk) begin
         case (Present_state)
@@ -91,7 +85,7 @@ module tb_brpl;
                 mar_in     = 1;
                 alu_opcode = 5'b10000; // INC
                 zlo_in     = 1;
-                force uut.u_regs.GEN_REGS[3].u_reg.q = 32'hFFFFFFFB;
+                force uut.u_regs.GEN_REGS[3].u_reg.q = 32'h0FFFFFFB;
             end
             // Zlowout, PCin, Read, Mdatain[31..0], MDRin
             T1: begin

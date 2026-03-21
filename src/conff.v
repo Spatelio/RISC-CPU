@@ -2,8 +2,8 @@ module conff(
     input wire [31:0] bus_in, //32 bits
     input wire [1:0]  irIn, //20-19
     input wire        con_in, // Control signal to load the Flip-Flop 
-    input wire        clk,    // Needed for the Flip-Flop
-    input wire        reset,  // Good practice to reset the FF
+    input wire        clk,    // synchronous
+    input wire        reset,  // 
     output reg        q
 );
 

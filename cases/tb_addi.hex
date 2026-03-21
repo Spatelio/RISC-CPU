@@ -1,0 +1,5 @@
+// 5'b10001, 4'd7, 4'd4, -19'd9
+// needs to be in hex for loading
+
+@0000
+8BA7FFF7

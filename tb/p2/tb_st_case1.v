@@ -43,11 +43,6 @@ module tb_st_case1;
 
     initial begin clk = 0; forever #10 clk = ~clk; end
 
-    initial begin
-        uut.u_ram.memData[9'h000] = {5'b10011, 4'd6, 4'd0, 19'h01F};
-        uut.u_ram.memData[9'h01F] = 32'h000000D4; // Case 1: st 0x1F, R6
-    end
-
     always @(posedge clk) begin
         case (Present_state)
             Default:  Present_state <= T_RESET;

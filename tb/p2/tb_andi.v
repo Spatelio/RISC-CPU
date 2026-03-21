@@ -43,10 +43,6 @@ module tb_andi;
 
     initial begin clk = 0; forever #10 clk = ~clk; end
 
-    initial begin
-        uut.u_ram.memData[9'h000] = {5'b10001, 4'd7, 4'd4, 19'h071}; // andi r7 r4 0x71
-    end
-
     always @(posedge clk) begin
         case (Present_state)
             Default:  Present_state <= T_RESET;
