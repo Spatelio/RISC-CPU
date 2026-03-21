@@ -84,7 +84,7 @@ module tb_brmi;
                 mar_in     = 1;
                 alu_opcode = 5'b10000; // INC
                 zlo_in     = 1;
-                force uut.u_regs.GEN_REGS[3].u_reg.q = 32'h0FFFFFFB;
+                force uut.u_regs.GEN_REGS[3].u_reg.q = 32'hFFFFFFFB;
             end
             // Zlowout, PCin, Read, Mdatain[31..0], MDRin
             T1: begin
