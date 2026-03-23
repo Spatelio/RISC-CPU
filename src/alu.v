@@ -1,30 +1,29 @@
 module alu(
-    input wire [31:0] A,          // Input from Y register
-    input wire [31:0] B,          // Input from the bus
-    input wire [4:0]  opcode,     // Operation code to select which operation to perform
-    output reg [63:0] C           // 64-bit result (for multiplication and division)
+    input  wire [31:0] A,          // Input from Y register
+    input  wire [31:0] B,          // Input from the bus
+    input  wire [4:0]  opcode,     // Operation code to select which operation to perform
+    output reg  [63:0] C           // 64-bit result (for multiplication and division)
 );
 
-    // Define operation codes (Matched to CPU Specification)
-    parameter ADD    = 5'b00000; // 
-    parameter SUB    = 5'b00001; // 
-    parameter AND    = 5'b00010; // 
-    parameter OR     = 5'b00011; // 
-    parameter SHR    = 5'b00100; // 
-    parameter SHRA   = 5'b00101; // 
-    parameter SHL    = 5'b00110; // 
-    parameter ROTR   = 5'b00111; // 
-    parameter ROTL   = 5'b01000; // 
+    // Mini SRC ALU Operation Codes
+    parameter ADD    = 5'b00000;
+    parameter SUB    = 5'b00001;
+    parameter AND    = 5'b00010;
+    parameter OR     = 5'b00011;
+    parameter SHR    = 5'b00100;
+    parameter SHRA   = 5'b00101;
+    parameter SHL    = 5'b00110;
+    parameter ROTR   = 5'b00111;
+    parameter ROTL   = 5'b01000;
+    parameter DIV    = 5'b01100;
+    parameter MUL    = 5'b01101;
+    parameter NEG    = 5'b01110;
+    parameter NOT    = 5'b01111;
     
-    parameter DIV    = 5'b01100; // 
-    parameter MUL    = 5'b01101; // 
-    parameter NEG    = 5'b01110; // 
-    parameter NOT    = 5'b01111; // 
+    // Internal Datapath Operation
     parameter INC    = 5'b10000;
 
-    //non alu used outputs putting them here so we know theyre taken
-    
-    // Wires for functional unit output
+    // Wires for functional unit outputs
     wire [31:0] add_result;
     wire [31:0] sub_result;
     wire [63:0] mul_result;
@@ -41,13 +40,11 @@ module alu(
     wire [31:0] inc_result; 
 
     // Instantiate unit modules
-    
     adder add_unit(
         .A(A),
         .B(B),
         .sum(add_result)
     );
-
 
     subtractor sub_unit(
         .A(A),
@@ -55,13 +52,11 @@ module alu(
         .Result(sub_result)
     );
 
-
     mult mul_unit(
         .a(A),
         .b(B),
         .z(mul_result)
     );
-
 
     div div_unit(
         .dividend(A),
@@ -69,13 +64,11 @@ module alu(
         .res(div_result)
     );
 
-
     and_ and_unit(
         .A(A),
         .B(B),
         .C(and_result)
     );
-
  
     or_ or_unit(
         .A(A),
@@ -83,25 +76,21 @@ module alu(
         .C(or_result)
     );
 
-
     not_ not_unit(
         .A(A),
         .C(not_result)
     );
-
 
     negate neg_unit(
         .A(A),
         .C(neg_result)
     );
 
-
     shiftr shr_unit(
         .A(A),
         .B(B[4:0]),  
         .C(shr_result)
     );
-
 
     shiftra shra_unit(
         .A(A),
@@ -115,13 +104,11 @@ module alu(
         .C(shiftl_result)
     );
 
-
     rotr rotr_unit(
         .A(A),
         .B(B[4:0]),
         .C(rotr_result)
     );
-
 
     rotl rotl_unit(
         .A(A),
