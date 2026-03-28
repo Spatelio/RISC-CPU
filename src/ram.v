@@ -9,7 +9,10 @@ module ram (
 
 reg[31:0] memData[0:511];
 
+integer ri;
 initial begin
+    for (ri = 0; ri < 512; ri = ri + 1)
+        memData[ri] = 32'b0;
     $readmemh("currentcase.hex", memData);
 end
 

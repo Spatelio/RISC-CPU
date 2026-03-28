@@ -1,3 +1,4 @@
+// Opcode matches insn[31:27] for user ops; INC is internal (PC+1 in fetch).
 module alu(
     input  wire [31:0] A,          // Input from Y register
     input  wire [31:0] B,          // Input from the bus

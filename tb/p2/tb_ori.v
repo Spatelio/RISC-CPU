@@ -23,7 +23,7 @@ module tb_ori;
     wire [31:0] out_port_data_out;
     wire        con_ff_out;
 
-    datapath uut (
+    datapath_manual uut (
         .clk(clk), .reset(reset),
         .gra(gra), .grb(grb), .grc(grc), .rin(rin), .rout(rout), .ba_out(ba_out),
         .pc_in(pc_in), .ir_in(ir_in), .y_in(y_in), .mar_in(mar_in),

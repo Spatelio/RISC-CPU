@@ -1,0 +1,7 @@
+// Minimal smoke test: ldi R4, 0x63; addi R7, R4, -9; halt  -> R7 = 0x5A
+@0000
+8A000063
+@0001
+4BA7FFF7
+@0002
+D8000000

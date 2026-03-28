@@ -28,7 +28,7 @@ module datapath_adder_tb;
     wire [31:0] mdr_q;
     wire [31:0] pc_q;
     // Instantiate Datapath
-    datapath uut (
+    datapath_manual uut (
         .clk(clk),
         .reset(reset),
         .r_in(r_in),

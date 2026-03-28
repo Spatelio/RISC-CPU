@@ -1,3 +1,4 @@
+// Ra=ir[26:23] Rb=[22:19] Rc=[18:15]  C sign-extended from ir[18:0]
 module selectencode(
     input wire [31:0] irIn,
     input wire gra, grb, grc,

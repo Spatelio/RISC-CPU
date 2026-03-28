@@ -25,7 +25,7 @@ module mdr_bus_tb;
     wire [31:0] mdr_q;
 
     // DUT
-    datapath dut (
+    datapath_manual dut (
         .clk(clk),
         .reset(reset),
 

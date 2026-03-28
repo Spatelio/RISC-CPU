@@ -1,6 +1,7 @@
+// BRANCH (5'b10101): irIn = insn[20:19] -> 00 brzr, 01 brnz, 10 brpl, 11 brmi
 module conff(
     input wire [31:0] bus_in, //32 bits
-    input wire [1:0]  irIn, //20-19
+    input wire [1:0]  irIn, // ir[20:19]
     input wire        con_in, // Control signal to load the Flip-Flop 
     input wire        clk,    // synchronous
     input wire        reset,  // 
