@@ -43,10 +43,10 @@ module tb_phase3;
         $finish;
     end
 
-    // Optional: iverilog +DUMP_PHASE3=1 to avoid huge VCDs by default
+    // Optional: run_sims passes -DDUMP_PHASE3 to avoid huge VCDs by default
     `ifdef DUMP_PHASE3
     initial begin
-        $dumpfile("tb_phase3.vcd");
+        $dumpfile("waves/p3/phase3.vcd");
         $dumpvars(1, tb_phase3);
     end
     `endif

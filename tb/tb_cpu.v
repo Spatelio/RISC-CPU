@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-// Integrated CPU simulation: datapath + control unit, memory from cases/tb_cpu.hex (copied to currentcase.hex by run script).
+// Short integrated CPU smoke test: cases/tb_cpu.hex (copy to currentcase.hex by run_sims.sh cpu).
 module tb_cpu;
 
     reg         clk;
@@ -46,7 +46,7 @@ module tb_cpu;
     end
 
     initial begin
-        $dumpfile("tb_cpu.vcd");
+        $dumpfile("waves/p3/tb_cpu.vcd");
         $dumpvars(0, tb_cpu);
     end
 

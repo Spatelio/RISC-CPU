@@ -10,7 +10,6 @@ module tb_jal;
 
     reg clk, reset;
     reg gra, grb, grc, rin, rout, ba_out;
-    reg jal_link_r12;
     reg pc_in, ir_in, y_in, mar_in, hi_in, lo_in, zhi_in, zlo_in;
     reg mdr_in, mdr_out, read, write, pc_out, c_out;
     reg in_port_out, out_port_in, con_in;
@@ -26,7 +25,6 @@ module tb_jal;
     datapath_manual uut (
         .clk(clk), .reset(reset),
         .gra(gra), .grb(grb), .grc(grc), .rin(rin), .rout(rout), .ba_out(ba_out),
-        .jal_link_r12(jal_link_r12),
         .pc_in(pc_in), .ir_in(ir_in), .y_in(y_in), .mar_in(mar_in),
         .hi_in(hi_in), .lo_in(lo_in), .zhi_in(zhi_in), .zlo_in(zlo_in),
         .alu_opcode(alu_opcode),
@@ -59,7 +57,6 @@ module tb_jal;
 
     always @(Present_state) begin
         {gra, grb, grc, rin, rout, ba_out}            = 6'b0;
-        jal_link_r12 = 1'b0;
         {pc_in, ir_in, y_in, mar_in, hi_in, lo_in}    = 6'b0;
         {zhi_in, zlo_in}                               = 2'b0;
         {mdr_in, mdr_out, read, write, pc_out, c_out}  = 6'b0;
@@ -95,11 +92,11 @@ module tb_jal;
                 mdr_out = 1;
                 ir_in = 1;
             end
-            // PC+1 -> R12 (hardware JAL; Rb field in IR not used for link)
+            // need to save pc to link reg (grb selects Rb from IR; not the fixed-R12 datapath path)
             T3: begin
-                pc_out       = 1;
-                rin          = 1;
-                jal_link_r12 = 1;
+                pc_out = 1;
+                rin    = 1;
+                grb    = 1;
             end
             //Gra, rout, pcin (this is still the last part of the branch since pc gets overwritten)
             T4: begin

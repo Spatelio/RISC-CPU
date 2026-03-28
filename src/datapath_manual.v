@@ -5,7 +5,6 @@ module datapath_manual (
 
     input  wire        gra, grb, grc,
     input  wire        rin, rout, ba_out,
-    input  wire        jal_link_r12,
 
     input  wire        pc_in, ir_in, y_in, mar_in, 
     input  wire        hi_in, lo_in, zhi_in, zlo_in,
@@ -47,7 +46,7 @@ module datapath_manual (
         .selectIn(rin),
         .selectOut(rout), 
         .BAout(ba_out),
-        .jal_link_r12(jal_link_r12),
+        .jal_link_r12(1'b0), // integrated CPU uses control_unit; manual TBs drive grb/grc/gra
         .regIn(internal_r_in),
         .regOut(internal_r_out),
         .c_sign_extended(c_sign_extended)
