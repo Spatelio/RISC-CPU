@@ -1,7 +1,8 @@
 module control_unit(
     // Select and Encode Controls
     output  reg        gra, grb, grc,
-    output  reg        rin, rout, ba_out, 
+    output  reg        rin, rout, ba_out,
+    output  reg        jal_link_r12, // JAL: PC+1 always to R12 (see selectencode)
 
     // Remaining Phase 1 register enables
     output  reg        pc_in, ir_in, y_in, mar_in, 
@@ -261,6 +262,7 @@ module control_unit(
     always @(*) begin
         gra = 1'b0; grb = 1'b0; grc = 1'b0;
         rin = 1'b0; rout = 1'b0; ba_out = 1'b0;
+        jal_link_r12 = 1'b0;
         pc_in = 1'b0; ir_in = 1'b0; y_in = 1'b0; mar_in = 1'b0;
         hi_in = 1'b0; lo_in = 1'b0; zhi_in = 1'b0; zlo_in = 1'b0;
         hi_out = 1'b0; lo_out = 1'b0;
@@ -457,11 +459,11 @@ module control_unit(
                     mdr_out = 1'b1;
                 end
 
-                // JAL (tb_jal)
+                // JAL: PC+1 -> R12 always; insn[26:23]=Ra jump target (Rb in word unused for link)
                 S_JAL0: begin
-                    pc_out = 1'b1;
-                    grb    = 1'b1;
-                    rin    = 1'b1;
+                    pc_out       = 1'b1;
+                    rin          = 1'b1;
+                    jal_link_r12 = 1'b1;
                 end
                 S_JAL1: begin
                     gra    = 1'b1;

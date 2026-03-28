@@ -14,6 +14,7 @@ module datapath (
 
     wire        gra, grb, grc;
     wire        rin, rout, ba_out;
+    wire        jal_link_r12;
     wire        pc_in, ir_in, y_in, mar_in;
     wire        hi_in, lo_in, zhi_in, zlo_in;
     wire        hi_out, lo_out;
@@ -42,6 +43,7 @@ module datapath (
     control_unit u_control (
         .gra(gra), .grb(grb), .grc(grc),
         .rin(rin), .rout(rout), .ba_out(ba_out),
+        .jal_link_r12(jal_link_r12),
         .pc_in(pc_in), .ir_in(ir_in), .y_in(y_in), .mar_in(mar_in),
         .hi_in(hi_in), .lo_in(lo_in), .zhi_in(zhi_in), .zlo_in(zlo_in),
         .hi_out(hi_out), .lo_out(lo_out),
@@ -66,6 +68,7 @@ module datapath (
         .selectIn(rin),
         .selectOut(rout),
         .BAout(ba_out),
+        .jal_link_r12(jal_link_r12),
         .regIn(internal_r_in),
         .regOut(internal_r_out),
         .c_sign_extended(c_sign_extended)

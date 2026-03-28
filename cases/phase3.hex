@@ -40,7 +40,7 @@
  @25 8C9FFFFC // ldi   R9, -4(R3)  ; R9 = 0x15 R8, R9, R10, and R11
  @26 8D300003 // ldi   R10, 3(R6)  ; R10 = 0xB2
  @27 8D880005 // ldi   R11, 5(R1)  ; R11 = 5
- @28 9D000000 // jal   R10         ; subA address 0xB2 in R10 into PC; return address 0x29 into R12
+ @28 9D180000 // jal: Ra=target R10, Rb=link R12 (RTL: pc+1 -> Rb, PC<-Ra); 9D000000 had Rb=R4
  @29 D8000000 // halt              ; upon return, the program halts
  @2A 00000000
  @2B 00000000
