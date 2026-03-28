@@ -24,7 +24,7 @@ module control_unit(
     //conff io
     output  reg        con_in,
 
-    // mdr_q: fetched word; insn latched in S_DECODE drives reg/immediate decode for all execute states.
+    // mdr_q: fetched word; insn latched at end of fetch2 (same word as IR will hold) for execute decode.
     input  wire [31:0] mdr_q,
     output reg  [31:0] insn,
     input  wire        con_ff_out,
@@ -104,10 +104,7 @@ module control_unit(
     localparam S_MFHI0 = 6'd42;
     localparam S_MFLO0 = 6'd43;
 
-    // One cycle after MDR→IR so ir[31:27] is valid before dispatch
-    localparam S_DECODE = 6'd44;
-
-    localparam S_HALT = 6'd45;
+    localparam S_HALT = 6'd44;
 
     // Primary opcode = ir[31:27] (same as SRC-ASM / alu R-type codes)
     parameter ADD    = 5'b00000;
@@ -141,7 +138,7 @@ module control_unit(
 
     reg [5:0] presentState = S_RESET;
 
-    // Latch at end of fetch2 (same cycle IR/MDR hold the new word); do not use S_DECODE (ordering vs. state reg).
+    // Latch at end of fetch2 (MDR already holds this insn during fetch2; IR loads same value from bus).
     always @(posedge clk, posedge reset) begin
         if (reset)
             insn <= 32'b0;
@@ -161,7 +158,7 @@ module control_unit(
         end
     endfunction
 
-    // Next-state (decode) — combinational from presentState + ir
+    // Dispatch from fetch2 using mdr_q (stable during fetch2; same 32-bit value loaded into IR that cycle).
     reg [5:0] nextState;
     always @(*) begin
         nextState = presentState;
@@ -169,8 +166,7 @@ module control_unit(
             S_RESET:  nextState = S_FETCH0;
             S_FETCH0: nextState = S_FETCH1;
             S_FETCH1: nextState = S_FETCH2;
-            S_FETCH2: nextState = S_DECODE;
-            S_DECODE: begin
+            S_FETCH2: begin
                 case (mdr_q[31:27])
                     ADD, SUB, AND, OR, SHR, SHRA, SHL, ROTR, ROTL: nextState = S_R0;
                     ADDI, ANDI, ORI: nextState = S_I0;
